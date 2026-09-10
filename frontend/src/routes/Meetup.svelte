@@ -449,7 +449,7 @@
     <button type="button" class="btn ghost sm" onclick={() => (dropOpen = false)}>Stay in</button>
   </Sheet>
   <Sheet open={deleteOpen} onclose={() => (deleteOpen = false)} title="Delete">
-    <h2 style="text-align:center">Delete “{meetup.title}”?{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 20)}</span>{/if}</h2>
+    <h2 style="text-align:center">Delete “{meetup.title}”{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 20)}</span>{/if}?</h2>
     <p class="muted" style="text-align:center;font-size:15px">This removes it for everyone. All {people.length} links stop working and everyone's selected times are gone. {data.mail_configured ? 'Invitees get a short email saying it\'s off.' : ''} This can't be undone.</p>
     <button type="button" class="btn danger sm" disabled={busy} onclick={doDelete}>{busy ? 'Deleting…' : 'Delete for everyone'}</button>
     <button type="button" class="btn ghost sm" onclick={() => (deleteOpen = false)}>Keep it</button>

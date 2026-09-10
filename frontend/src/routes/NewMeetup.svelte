@@ -92,7 +92,7 @@
     <div class="top"><span></span><span class="label">Done</span></div>
     <div class="body">
       <div>
-        <h1>“{created.meetup.title}” is ready{#if created.meetup.icon}<span class="h-icon">{@html iconSvg(created.meetup.icon, 26)}</span>{/if}</h1>
+        <h1>“{created.meetup.title}”{#if created.meetup.icon}<span class="h-icon">{@html iconSvg(created.meetup.icon, 26)}</span>{/if} is ready</h1>
         <p class="lead">{created.mail_configured ? 'Invites are on their way. Your planner link was emailed to you too.' : 'Email isn’t set up on the server yet, so nothing was sent. Share the links below yourself.'}</p>
       </div>
       <div class="msg info">Meetups you create or open are saved on this device and listed on the Meetup home screen. <button type="button" class="inline-link" onclick={() => (saveOpen = true)}>Bookmark or install</button> to get back even faster.</div>
