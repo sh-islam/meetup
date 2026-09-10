@@ -39,13 +39,14 @@
 *::-webkit-scrollbar-corner { background: transparent; }
 
 html, body { margin: 0; min-height: 100%; }
-html { background: var(--ground-a); }
+/* the ground lives on <html>; body stays transparent so the glow + sweep below sit above it and under the UI */
+html { background: linear-gradient(170deg, var(--ground-b) 0%, var(--ground-a) 60%) fixed var(--ground-a); }
 body {
   font-family: var(--font);
   color: var(--text);
   font-size: 17px; line-height: 1.4;
   -webkit-font-smoothing: antialiased;
-  background: linear-gradient(170deg, var(--ground-b) 0%, var(--ground-a) 60%) fixed;
+  background: transparent;
   overscroll-behavior-y: none;
 }
 /* background glow + slow drift; the sheen sweeps once every 12s. Background only. */
@@ -58,7 +59,7 @@ body::before {
 }
 body::after {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(115deg, transparent 40%, oklch(1 0 0 / .07) 50%, transparent 60%);
+  background: linear-gradient(115deg, transparent 38%, oklch(1 0 0 / .10) 50%, transparent 62%);
   background-size: 250% 100%;
   animation: sheen 12s linear infinite;
 }

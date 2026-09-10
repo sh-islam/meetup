@@ -121,7 +121,7 @@
   <div class="screen column">
     {@render top(`Step 1 of ${TOTAL}`)}
     <div class="body">
-      <div><h1>Which days?</h1><p class="lead">Pick every day that could work. You'll paint your free times next.</p></div>
+      <div><h1>Which days?</h1><p class="lead">Pick every day that could work. You'll select your free times next.</p></div>
       <DatePicker bind:dates={d.dates} />
     </div>
     <div class="bottom"><button type="button" class="btn" disabled={!d.dates.length} onclick={next}>Next<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
@@ -159,7 +159,7 @@
     <div class="body">
       <div><h1>What is it?</h1><p class="lead">A name people will recognise in their inbox.</p></div>
       <div class="field"><label for="title">Title</label><input id="title" type="text" placeholder="Board game night" bind:value={d.title} autocomplete="off" /></div>
-      <div class="field"><label>Icon <span class="muted">(optional, just for fun)</span></label><IconPicker bind:value={d.icon} /></div>
+      <div class="field"><label>Icon</label><IconPicker bind:value={d.icon} /></div>
       <div class="field"><label for="desc">Description <span class="muted">(optional)</span></label><textarea id="desc" placeholder="Anything people should know" bind:value={d.description}></textarea></div>
     </div>
     <div class="bottom"><button type="button" class="btn" disabled={!d.title.trim()} onclick={next}>Next<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
