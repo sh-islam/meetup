@@ -70,8 +70,7 @@
     const ps = created.participants
     const lines = [`${created.meetup.title} — Meetup links`, '', `Planner (you): ${ps.find((p) => p.role === 'planner').url}`]
     for (const p of ps.filter((p) => p.role === 'invitee')) lines.push(`${p.name} (${p.email}): ${p.url}`)
-    await copy(lines.join('
-'), 'all')
+    await copy(lines.join('\n'), 'all')
   }
   async function copy(text, key) {
     if (await copyText(text)) { copied = key; setTimeout(() => { if (copied === key) copied = '' }, 1500) }
