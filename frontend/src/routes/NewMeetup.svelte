@@ -66,6 +66,13 @@
       window.scrollTo(0, 0)
     } catch (e) { error = e.message } finally { busy = false }
   }
+  async function copyAll() {
+    const ps = created.participants
+    const lines = [`${created.meetup.title} — Meetup links`, '', `Planner (you): ${ps.find((p) => p.role === 'planner').url}`]
+    for (const p of ps.filter((p) => p.role === 'invitee')) lines.push(`${p.name} (${p.email}): ${p.url}`)
+    await copy(lines.join('
+'), 'all')
+  }
   async function copy(text, key) {
     if (await copyText(text)) { copied = key; setTimeout(() => { if (copied === key) copied = '' }, 1500) }
   }
@@ -89,6 +96,7 @@
         <p class="lead">{created.mail_configured ? 'Invites are on their way. Your planner link was emailed to you too.' : 'Email isn’t set up on the server yet, so nothing was sent. Share the links below yourself.'}</p>
       </div>
       <div class="msg info">Meetups you create or open are saved on this device and listed on the Meetup home screen. <button type="button" class="inline-link" onclick={() => (saveOpen = true)}>Bookmark or install</button> to get back even faster.</div>
+      <button type="button" class="btn ghost" onclick={copyAll}>{copied === 'all' ? 'Copied all links' : 'Copy all links'}</button>
       <div>
         <div class="label" style="margin-bottom:12px">Your planner link</div>
         <div class="glass linkcard">
