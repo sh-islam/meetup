@@ -70,3 +70,26 @@ export function clearDraft() {
 }
 
 export const isWide = () => window.matchMedia('(min-width: 900px)').matches
+
+// ---- meetups opened on this device (the in-app "bookmark") ----
+const RECENT = 'meetup.recent.v1'
+export function loadRecent() {
+  try { return JSON.parse(localStorage.getItem(RECENT) || '[]') } catch { return [] }
+}
+export function rememberMeetup({ token, title, role }) {
+  try {
+    const list = loadRecent().filter((m) => m.token !== token)
+    list.unshift({ token, title, role, at: Date.now() })
+    localStorage.setItem(RECENT, JSON.stringify(list.slice(0, 12)))
+  } catch { /* ignore */ }
+}
+export function forgetMeetup(token) {
+  try { localStorage.setItem(RECENT, JSON.stringify(loadRecent().filter((m) => m.token !== token))) } catch { /* ignore */ }
+}
+
+// ---- PWA install prompt (Chrome on Android / desktop) ----
+let _installEvent = null
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); _installEvent = e })
+}
+export const installPrompt = { get: () => _installEvent, clear: () => { _installEvent = null } }

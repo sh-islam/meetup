@@ -38,7 +38,7 @@ Find a date and time that works for a group of friends without anyone creating a
 - Timezone is fixed per meetup to the planner's zone. Viewers elsewhere see converted times with a notice.
 
 ## Meetup settings (shown under the meetup, planner only)
-- Painting mode: "Everyone paints freely" (default; goal is to discover when everyone is free)
+- Time selection: "Anyone can select any time" (default; goal is to discover when everyone is free)
   or "Restrict to planner's times" (cells the planner did not paint are greyed out for invitees).
 
 ## Status lifecycle

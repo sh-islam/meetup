@@ -136,4 +136,4 @@ Behaviour:
 - Home buttons: "New meetup" / "Existing meetup"
 - Invitee save button: "Send my availability"
 - Planner one-person email action: "Nudge" (button reads "Nudge {name}")
-- Painting mode setting: "Anyone can paint any time" / "Only the times I picked"
+- Time selection setting: "Anyone can select any time" / "Only the times I picked"

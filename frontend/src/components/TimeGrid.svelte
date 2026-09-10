@@ -201,7 +201,7 @@
   }
 </script>
 
-<div class="tg-wrap" class:fill class:dragging={!!drag} class:readonly bind:this={wrapEl}>
+<div class="tg-wrap edge-sheen" class:fill class:dragging={!!drag} class:readonly bind:this={wrapEl}>
   <div class="tg" style="--cols:{dates.length}" bind:this={gridEl} use:touchPaint onmousedown={onMouseDown}
        oncontextmenu={(e) => e.preventDefault()} role="grid" tabindex="0" aria-label="Availability grid">
     <div class="tg-corner"></div>
@@ -231,6 +231,7 @@
     max-height: min(72dvh, 900px);
   }
   .tg-wrap.fill { flex: 1; min-height: 0; max-height: none; }
+  .tg-wrap.edge-sheen::after { border-radius: 0; }
   .tg-wrap.dragging { cursor: crosshair; }
   .tg { display: grid; grid-template-columns: 60px repeat(var(--cols), minmax(64px, 1fr)); grid-template-rows: auto; grid-auto-rows: 13px; min-width: 100%; outline: none; }
   .tg-corner, .tg-head { position: sticky; top: 0; z-index: 3; background: var(--surface); border-bottom: 1px solid var(--line-2); }

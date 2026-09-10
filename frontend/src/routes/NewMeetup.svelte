@@ -6,9 +6,10 @@
   import InviteeList from '../components/InviteeList.svelte'
   import MapPicker from '../components/MapPicker.svelte'
   import Sheet from '../components/Sheet.svelte'
+  import SaveSheet from '../components/SaveSheet.svelte'
   import { api } from '../lib/api.js'
   import { localTimezone, slotDate, slotMinutes, fmtDate, fmtTime } from '../lib/time.js'
-  import { go, back, copyText, loadDraft, saveDraft, clearDraft } from '../lib/store.js'
+  import { go, back, copyText, loadDraft, saveDraft, clearDraft, rememberMeetup } from '../lib/store.js'
 
   let { step = '1' } = $props()
 
@@ -17,6 +18,7 @@
 
   let hoursOpen = $state(false)
   let optionsOpen = $state(false)
+  let saveOpen = $state(false)
   let busy = $state(false)
   let error = $state('')
   let created = $state(null)
@@ -56,6 +58,7 @@
         planner: { name: d.plannerName, email: d.plannerEmail }, invitees: d.invitees, availability: d.mySlots,
       })
       clearDraft()
+      rememberMeetup({ token: created.planner_token, title: created.meetup.title, role: 'planner' })
       go('/new/done')
       window.scrollTo(0, 0)
     } catch (e) { error = e.message } finally { busy = false }
@@ -81,6 +84,7 @@
         <h1>“{created.meetup.title}” is ready</h1>
         <p class="lead">{created.mail_configured ? 'Invites are on their way. Your planner link was emailed to you too.' : 'Email isn’t set up on the server yet, so nothing was sent. Share the links below yourself.'}</p>
       </div>
+      <div class="msg info">This meetup is saved on this device: it's listed on the Meetup home screen. <button type="button" class="inline-link" onclick={() => (saveOpen = true)}>Bookmark or install</button> to get back even faster.</div>
       <div>
         <div class="label" style="margin-bottom:12px">Your planner link</div>
         <div class="glass linkcard">
@@ -107,6 +111,9 @@
     </div>
     <div class="bottom"><button type="button" class="btn" onclick={finish}>Open my dashboard</button></div>
   </div>
+  <Sheet open={saveOpen} onclose={() => (saveOpen = false)} title="Save">
+    <SaveSheet url={created.participants.find((p) => p.role === 'planner').url} title={created.meetup.title} onclose={() => (saveOpen = false)} />
+  </Sheet>
 
 {:else if n === 1}
   <div class="screen column">
@@ -123,11 +130,11 @@
     {@render top(`Step 2 of ${TOTAL}`)}
     <div class="body tight" style="padding-bottom:0">
       <div class="row between">
-        <div><h1>When are you free?</h1><p class="lead">Press and hold, then drag to paint. Tap a painted time to clear it the same way.</p></div>
+        <div><h1>When are you free?</h1><p class="lead">Press and hold, then drag to select the times you're free. Do the same over a selected time to clear it.</p></div>
       </div>
       <div class="row between">
         <button type="button" class="chip" onclick={() => (hoursOpen = true)}><span class="txt">Hours: {hoursLabel}</span><span class="x" aria-hidden="true">›</span></button>
-        <span class="caption">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h painted` : ''}</span>
+        <span class="caption">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h selected` : ''}</span>
       </div>
       <div class="gridbox">
         <TimeGrid dates={d.dates} hourStart={d.hourStart} hourEnd={d.hourEnd} bind:mySlots={d.mySlots} fill />
@@ -185,19 +192,19 @@
       <div class="glass" style="padding:4px 20px">
         <button type="button" class="list-row" onclick={() => go('/new/3')}><div class="main"><div class="t">{d.title}</div><div class="s">{d.description || 'No description'}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/1')}><div class="main"><div class="t">{d.dates.length} {d.dates.length === 1 ? 'day' : 'days'}</div><div class="s">{d.dates.map((x) => fmtDate(x)).join(', ')}</div></div><span class="chev">›</span></button>
-        <button type="button" class="list-row" onclick={() => go('/new/2')}><div class="main"><div class="t">Your times</div><div class="s">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h painted · hours ${hoursLabel}` : `Nothing painted yet · hours ${hoursLabel}`}</div></div><span class="chev">›</span></button>
+        <button type="button" class="list-row" onclick={() => go('/new/2')}><div class="main"><div class="t">Your times</div><div class="s">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h selected · hours ${hoursLabel}` : `Nothing selected yet · hours ${hoursLabel}`}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/4')}><div class="main"><div class="t">{d.plannerName}</div><div class="s">{d.plannerEmail}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/5')}><div class="main"><div class="t">{d.invitees.length} invited</div><div class="s">{d.invitees.length ? d.invitees.map((i) => i.name || i.email).join(', ') : 'Nobody yet'}</div></div><span class="chev">›</span></button>
       </div>
       <div>
-        <button type="button" class="list-row opt" onclick={() => (optionsOpen = !optionsOpen)}><div class="main"><div class="t">Options</div><div class="s">{d.paintMode === 'free' ? 'Anyone can paint any time' : 'Only the times I picked'}{d.location ? ` · ${d.location}` : ''}</div></div><span class="chev">{optionsOpen ? '⌃' : '⌄'}</span></button>
+        <button type="button" class="list-row opt" onclick={() => (optionsOpen = !optionsOpen)}><div class="main"><div class="t">Options</div><div class="s">{d.paintMode === 'free' ? 'Anyone can select any time' : 'Only the times I picked'}{d.location ? ` · ${d.location}` : ''}</div></div><span class="chev">{optionsOpen ? '⌃' : '⌄'}</span></button>
         {#if optionsOpen}
           <div class="stack" style="margin-top:12px">
             <div>
-              <div class="label" style="margin-bottom:10px">Painting</div>
+              <div class="label" style="margin-bottom:10px">Time selection</div>
               <div class="stack" style="gap:8px">
-                <button type="button" class="choice" class:on={d.paintMode === 'free'} onclick={() => (d.paintMode = 'free')}><span class="dot"></span><span><div class="t">Anyone can paint any time</div><div class="s">Best for finding out when everyone is free.</div></span></button>
-                <button type="button" class="choice" class:on={d.paintMode === 'restricted'} onclick={() => (d.paintMode = 'restricted')}><span class="dot"></span><span><div class="t">Only the times I picked</div><div class="s">Invitees can only choose within the times you painted.</div></span></button>
+                <button type="button" class="choice" class:on={d.paintMode === 'free'} onclick={() => (d.paintMode = 'free')}><span class="dot"></span><span><div class="t">Anyone can select any time</div><div class="s">Best for finding out when everyone is free.</div></span></button>
+                <button type="button" class="choice" class:on={d.paintMode === 'restricted'} onclick={() => (d.paintMode = 'restricted')}><span class="dot"></span><span><div class="t">Only the times I picked</div><div class="s">Invitees can only choose within the times you selected.</div></span></button>
               </div>
             </div>
             <MapPicker bind:location={d.location} />
@@ -218,6 +225,7 @@
   .linkcard .who { font-weight: 700; display: flex; gap: 8px; align-items: center; }
   .linkcard code { font-size: 12px; word-break: break-all; color: var(--text-3); font-family: ui-monospace, Menlo, monospace; }
   .opt { border-top: 1px solid var(--line); }
+  .inline-link { color: var(--accent); font-weight: 700; text-decoration: underline; }
   @media (min-width: 900px) {
     .screen.column.wide { max-width: 960px; }
     .fixed { height: calc(100dvh - 48px); }

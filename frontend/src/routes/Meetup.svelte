@@ -10,9 +10,10 @@
   import InviteeList from '../components/InviteeList.svelte'
   import MapPicker from '../components/MapPicker.svelte'
   import Sheet from '../components/Sheet.svelte'
+  import SaveSheet from '../components/SaveSheet.svelte'
   import { api, setToken } from '../lib/api.js'
   import { SLOT_MIN, addMinutes, fmtBlock, fmtDate, fmtTime, localTimezone, slotDate, slotKey, slotMinutes } from '../lib/time.js'
-  import { copyText, go, isWide } from '../lib/store.js'
+  import { copyText, go, isWide, rememberMeetup } from '../lib/store.js'
 
   let { token, tab = 'times' } = $props()
 
@@ -31,6 +32,7 @@
 
   // sheets
   let detailsOpen = $state(false)
+  let saveOpen = $state(false)
   let decideOpen = $state(false)
   let selection = $state(null)
   let editing = $state(null)        // null | about | location | days | hours | mode
@@ -99,7 +101,10 @@
   async function load() {
     loading = true; error = ''
     setToken(token)
-    try { apply(await api.getMeetup()) } catch (e) { error = e.message } finally { loading = false }
+    try {
+      apply(await api.getMeetup())
+      rememberMeetup({ token, title: data.meetup.title, role: data.me.role })
+    } catch (e) { error = e.message } finally { loading = false }
   }
   $effect(() => { token; load() })
   $effect(() => { if (isPlanner && activeTab === 'best') loadStats() })
@@ -206,7 +211,9 @@
   }
   const hoursLabel = $derived(meetup ? `${fmtTime(meetup.hour_start * 60, true)} to ${meetup.hour_end === 24 ? 'midnight' : fmtTime(meetup.hour_end * 60, true)}` : '')
   const responded = $derived(people.filter((p) => p.responded).length)
-  const sheetOpen = $derived(detailsOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
+  const answeredLine = $derived(`${responded} of ${people.length} have answered`)
+  const myUrl = $derived(`${location.origin}${location.pathname}#/m/${token}`)
+  const sheetOpen = $derived(detailsOpen || saveOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
 </script>
 
 {#snippet icon(name)}
@@ -252,6 +259,7 @@
       <div>
         <h2>{meetup.title}</h2>
         <div class="sub">Planned by {isPlanner ? 'you' : planner.name} · {people.length} people{meetup.location ? ` · ${meetup.location}` : ''}</div>
+        <div class="sub" style="margin-top:2px">{answeredLine}</div>
         <button type="button" class="link" onclick={() => (detailsOpen = true)}>Details</button>
       </div>
       {#if isPlanner}
@@ -261,7 +269,7 @@
           {/each}
         </nav>
       {/if}
-      <div class="caption" style="margin-top:auto">{responded} of {people.length} have answered{tzNote ? ` · ${tzNote}` : ''}</div>
+      {#if tzNote}<div class="caption" style="margin-top:auto">{tzNote}</div>{/if}
     </aside>
 
     <div class="main">
@@ -272,10 +280,11 @@
             {#if activeTab === 'times'}
               <h2>{meetup.title}</h2>
               <div class="sub">Planned by {isPlanner ? 'you' : planner.name} · {people.length} people{meetup.location ? ` · ${meetup.location}` : ''}</div>
+              <div class="sub" style="margin-top:2px">{answeredLine}</div>
             {:else if activeTab === 'best'}
-              <h2>Best times</h2><div class="sub">{responded} of {people.length} have answered</div>
+              <h2>Best times</h2><div class="sub">{answeredLine}</div>
             {:else if activeTab === 'people'}
-              <h2>People</h2><div class="sub">{responded} of {people.length} have answered</div>
+              <h2>People</h2><div class="sub">{answeredLine}</div>
             {:else}
               <h2>Settings</h2><div class="sub">{meetup.title}</div>
             {/if}
@@ -332,20 +341,20 @@
             <button type="button" class="list-row" disabled={confirmed} onclick={() => (editing = 'location')}><div class="main"><div class="t">Location</div><div class="s">{meetup.location || 'Not set'}</div></div><span class="chev">›</span></button>
             <button type="button" class="list-row" disabled={confirmed} onclick={() => (editing = 'days')}><div class="main"><div class="t">Days</div><div class="s">{meetup.dates.map((x) => fmtDate(x)).join(', ')}</div></div><span class="chev">›</span></button>
             <button type="button" class="list-row" disabled={confirmed} onclick={() => (editing = 'hours')}><div class="main"><div class="t">Hours to show</div><div class="s">{hoursLabel}</div></div><span class="chev">›</span></button>
-            <button type="button" class="list-row" disabled={confirmed} onclick={() => (editing = 'mode')}><div class="main"><div class="t">Painting</div><div class="s">{meetup.paint_mode === 'free' ? 'Anyone can paint any time' : 'Only the times I picked'}</div></div><span class="chev">›</span></button>
+            <button type="button" class="list-row" disabled={confirmed} onclick={() => (editing = 'mode')}><div class="main"><div class="t">Time selection</div><div class="s">{meetup.paint_mode === 'free' ? 'Anyone can select any time' : 'Only the times I picked'}</div></div><span class="chev">›</span></button>
           </div>
           {#if confirmed}
             <p class="caption">This meetup is confirmed, so settings are locked.</p>
             <button type="button" class="btn danger" disabled={busy} onclick={doReopen}>Undo confirmation</button>
           {:else}
-            <p class="caption">Changing days or hours emails everyone, and drops painted times that no longer fit.</p>
+            <p class="caption">Changing days or hours emails everyone, and drops selected times that no longer fit.</p>
           {/if}
         </div>
       {/if}
     </div>
 
     {#if isPlanner}
-      <nav class="tabbar">
+      <nav class="tabbar tabbar-sheen">
         {#each [['times', 'Times'], ['best', 'Best'], ['people', 'People'], ['settings', 'Settings']] as [t, l] (t)}
           <button type="button" class="tab" class:on={activeTab === t} onclick={() => openTab(t)}>{@render icon(t)}{l}</button>
         {/each}
@@ -366,7 +375,11 @@
   {#if toast}<div class="toast">{toast}</div>{/if}
 
   <Sheet open={detailsOpen} onclose={() => (detailsOpen = false)} title="Details">
-    <NudgeDialog {meetup} {planner} {people} {confirmedNames} onclose={() => (detailsOpen = false)} />
+    <NudgeDialog {meetup} {planner} {people} {confirmedNames} {responded} best={data.best} {isPlanner} onclose={() => (detailsOpen = false)} onsave={() => { detailsOpen = false; saveOpen = true }} />
+  </Sheet>
+
+  <Sheet open={saveOpen} onclose={() => (saveOpen = false)} title="Save">
+    <SaveSheet url={myUrl} title={meetup.title} onclose={() => (saveOpen = false)} />
   </Sheet>
 
   <Sheet open={decideOpen && !wide} onclose={closeDecide} title="Decide">
@@ -411,10 +424,10 @@
     <HourRange bind:hourStart={fHs} bind:hourEnd={fHe} />
     <button type="button" class="btn sm" disabled={busy} onclick={() => saveSettings({ hour_start: fHs, hour_end: fHe })}>Save</button>
   </Sheet>
-  <Sheet open={editing === 'mode'} onclose={() => (editing = null)} title="Painting">
-    <h2 style="text-align:center">Painting</h2>
-    <button type="button" class="choice" class:on={fMode === 'free'} onclick={() => (fMode = 'free')}><span class="dot"></span><span><div class="t">Anyone can paint any time</div><div class="s">Best for finding out when everyone is free.</div></span></button>
-    <button type="button" class="choice" class:on={fMode === 'restricted'} onclick={() => (fMode = 'restricted')}><span class="dot"></span><span><div class="t">Only the times I picked</div><div class="s">Invitees can only choose within the times you painted.</div></span></button>
+  <Sheet open={editing === 'mode'} onclose={() => (editing = null)} title="Time selection">
+    <h2 style="text-align:center">Time selection</h2>
+    <button type="button" class="choice" class:on={fMode === 'free'} onclick={() => (fMode = 'free')}><span class="dot"></span><span><div class="t">Anyone can select any time</div><div class="s">Best for finding out when everyone is free.</div></span></button>
+    <button type="button" class="choice" class:on={fMode === 'restricted'} onclick={() => (fMode = 'restricted')}><span class="dot"></span><span><div class="t">Only the times I picked</div><div class="s">Invitees can only choose within the times you selected.</div></span></button>
     <button type="button" class="btn sm" disabled={busy} onclick={() => saveSettings({ paint_mode: fMode })}>Save</button>
   </Sheet>
 {/if}
@@ -434,7 +447,7 @@
   .gridbox { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   .panel { display: none; }
   .page { flex: 1; min-height: 0; overflow: auto; padding: 4px var(--pad) 120px; display: flex; flex-direction: column; gap: 24px; }
-  .tabbar { display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: var(--bar-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid var(--edge); flex: none; }
+  .tabbar { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: var(--bar-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid var(--edge); flex: none; }
   .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0 6px; border-radius: 14px; color: var(--text-3); font-size: 12px; font-weight: 700; min-height: 52px; }
   .tab.on { color: var(--accent); }
   .sheet-open .tabbar, .sheet-open .float, .sheet-open .pill { visibility: hidden; }

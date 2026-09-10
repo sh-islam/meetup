@@ -1,5 +1,7 @@
 <script>
-  import { go } from '../lib/store.js'
+  import { go, loadRecent, forgetMeetup } from '../lib/store.js'
+  let recent = $state(loadRecent())
+  function forget(t) { forgetMeetup(t); recent = loadRecent() }
 </script>
 
 <div class="home">
@@ -12,6 +14,19 @@
     <button type="button" class="btn" onclick={() => go('/new/1')}>New meetup</button>
     <button type="button" class="btn ghost" onclick={() => go('/open')}>Existing meetup</button>
   </div>
+  {#if recent.length}
+    <div class="recent">
+      <div class="label" style="margin-bottom:12px">Your meetups on this device</div>
+      <div class="glass" style="padding:4px 16px;text-align:left">
+        {#each recent as m (m.token)}
+          <div class="list-row">
+            <button type="button" class="main rbtn" onclick={() => go(`/m/${m.token}`)}><div class="t">{m.title}</div><div class="s">{m.role === 'planner' ? 'You planned this' : 'You were invited'}</div></button>
+            <button type="button" class="icon-btn" onclick={() => forget(m.token)} aria-label="Remove from this list">×</button>
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -21,4 +36,6 @@
   h1 span { color: var(--accent); }
   .lead { font-size: 17px; }
   .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; width: 100%; }
+  .recent { width: 100%; margin-top: 40px; }
+  .rbtn { text-align: left; }
 </style>

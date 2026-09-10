@@ -1,5 +1,5 @@
 // Thin fetch wrapper. The token identifies the person; the role comes from the server.
-export const API = (import.meta.env.VITE_API_URL || '/meetup-api').replace(/\/$/, '')
+export const API = (import.meta.env.VITE_API_URL || 'https://shad-server.elf-tarpon.ts.net/meetup-api').replace(/\/$/, '')
 
 let token = null
 export function setToken(t) { token = t }

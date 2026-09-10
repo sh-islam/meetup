@@ -5,6 +5,7 @@ from services.scheduling import (
     display_name,
     fmt_day_full,
     heatmap,
+    ranked_windows,
 )
 
 
@@ -85,6 +86,9 @@ def meetup_view(db, meetup, me):
             }
         plist.append(item)
 
+    hm = heatmap(db, mid)
+    best = ranked_windows(dates, meetup["hour_start"], meetup["hour_end"], hm, people, limit=1)
+
     return {
         "meetup": {
             "id": mid,
@@ -110,6 +114,8 @@ def meetup_view(db, meetup, me):
         "participants": plist,
         "my_slots": my_slots(db, me["id"]),
         "planner_slots": my_slots(db, planner["id"]),
-        "heatmap": heatmap(db, mid),
+        "heatmap": hm,
+        "best": best[0] if best else None,
+        "responded": sum(1 for p in people if p["last_saved_at"]),
         "mail_configured": config.mail_configured(),
     }
