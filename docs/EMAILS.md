@@ -1,7 +1,7 @@
 # Email wording (to approve before shipping)
 
 Each email has a subject, an HTML body and a plain-text body. Placeholders in {braces}.
-All seven emails are approved as of 2026-09-10. Every subject is prefixed "Meetup: " by the mailer.
+All eight emails are approved as of 2026-09-10. Every subject is prefixed "Meetup: " by the mailer.
 
 | kind            | to             | when                                   | must include |
 |-----------------|----------------|----------------------------------------|--------------|
@@ -143,7 +143,7 @@ Hi {name},
 
 Sorry to bring bad news. Hopefully next time!
 
-### dropped_out  (DRAFT, not approved)
+### dropped_out  (approved 2026-09-10)
 Subject: Meetup: {name} dropped out of "{title}"
 
 {name} has dropped out of "{title}".
