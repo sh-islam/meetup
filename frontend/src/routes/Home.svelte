@@ -57,7 +57,7 @@
       <div class="glass" style="padding:4px 16px;text-align:left">
         {#each recent as m (m.token)}
           <div class="list-row">
-            <button type="button" class="main rbtn" onclick={() => go(`/m/${m.token}`)}><div class="t">{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}{m.title}</div><div class="s">{m.role === 'planner' ? 'You planned this' : 'You were invited'}</div></button>
+            <button type="button" class="main rbtn" onclick={() => go(`/m/${m.token}`)}><div class="t">{m.title}{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}</div><div class="s">{m.role === 'planner' ? 'You planned this' : 'You were invited'}</div></button>
             <div class="row" style="gap:2px">
               <button type="button" class="icon-btn eye" onclick={() => { hiding = m; mode = 'hide'; dropStep = false }} aria-label="Hide from this device"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.7 5.1A10.9 10.9 0 0 1 12 5c7 0 10 7 10 7a13.2 13.2 0 0 1-1.7 2.5"/><path d="M6.6 6.6A13.5 13.5 0 0 0 2 12s3 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="m2 2 20 20"/></svg></button>
               <button type="button" class="icon-btn trash" onclick={() => { hiding = m; mode = 'remove'; dropStep = false }} aria-label={m.role === 'planner' ? 'Delete the meetup' : 'Drop out'}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
@@ -80,7 +80,7 @@
     {#each hidden as m (m.token)}
       <div class="list-row">
         <div class="main">
-          <div class="t">{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}{m.title}</div>
+          <div class="t">{m.title}{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}</div>
           <div class="s">
             {#if status[m.token] === 'checking'}Checking…
             {:else if status[m.token] === 'ok'}{m.role === 'planner' ? 'You planned this' : 'You were invited'}
@@ -115,7 +115,7 @@
       <p class="caption" style="text-align:center">The meetup isn't affected. You can bring it back with Restore hidden, or open it from the link in your email.</p>
     {/if}
     <div class="glass" style="padding:16px;text-align:left">
-      <div style="font-weight:700">{#if hiding.icon}<span class="h-icon">{@html iconSvg(hiding.icon, 18)}</span>{/if}{hiding.title}</div>
+      <div style="font-weight:700">{hiding.title}{#if hiding.icon}<span class="h-icon">{@html iconSvg(hiding.icon, 18)}</span>{/if}</div>
       <div class="caption" style="margin-top:2px">{hiding.role === 'planner' ? 'You planned this' : 'You were invited'}</div>
       <code class="link">{linkFor(hiding.token)}</code>
     </div>
@@ -153,5 +153,5 @@
   .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; width: 100%; }
   .recent { width: 100%; margin-top: 40px; }
   .rbtn { text-align: left; }
-  .h-icon { display: inline-block; vertical-align: -3px; margin-right: 8px; color: var(--accent); }
+  .h-icon { display: inline-block; vertical-align: -3px; margin-left: 8px; color: var(--accent); }
 </style>

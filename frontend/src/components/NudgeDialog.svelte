@@ -6,8 +6,7 @@
   let { meetup, planner, people = [], confirmedNames = [], responded = 0, best = null, isPlanner = false, onclose = () => {}, onsave = () => {}, ondropout = () => {} } = $props()
 </script>
 
-{#if meetup.icon}<div class="tile">{@html iconSvg(meetup.icon, 34)}</div>{/if}
-<h2>{meetup.title}</h2>
+<h2>{meetup.title}{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 20)}</span>{/if}</h2>
 <div class="muted" style="font-size:15px">Planned by {planner.name} · {people.length} people</div>
 {#if meetup.location}<MapPicker location={meetup.location} readonly />{/if}
 {#if meetup.description}<p class="desc">{meetup.description}</p>{/if}
@@ -32,7 +31,6 @@
 <button type="button" class="link" onclick={onclose}>Close</button>
 
 <style>
-  .tile { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid oklch(0.80 0.14 215 / .4); color: var(--accent); margin-bottom: -4px; }
   .desc { white-space: pre-line; font-size: 16px; line-height: 1.5; color: var(--text); }
   .facts { padding: 4px 16px; }
   .fact { display: flex; flex-direction: column; gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--line); }

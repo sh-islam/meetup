@@ -90,8 +90,7 @@
     <div class="top"><span></span><span class="label">Done</span></div>
     <div class="body">
       <div>
-        {#if created.meetup.icon}<div class="tile">{@html iconSvg(created.meetup.icon, 34)}</div>{/if}
-        <h1>“{created.meetup.title}” is ready</h1>
+        <h1>“{created.meetup.title}” is ready{#if created.meetup.icon}<span class="h-icon">{@html iconSvg(created.meetup.icon, 26)}</span>{/if}</h1>
         <p class="lead">{created.mail_configured ? 'Invites are on their way. Your planner link was emailed to you too.' : 'Email isn’t set up on the server yet, so nothing was sent. Share the links below yourself.'}</p>
       </div>
       <div class="msg info">Meetups you create or open are saved on this device and listed on the Meetup home screen. <button type="button" class="inline-link" onclick={() => (saveOpen = true)}>Bookmark or install</button> to get back even faster.</div>
@@ -202,7 +201,7 @@
       <div><h1>Review</h1><p class="lead">Tap a row to change it.</p></div>
       {#if error}<div class="msg error">{error}</div>{/if}
       <div class="glass" style="padding:4px 20px">
-        <button type="button" class="list-row" onclick={() => go('/new/3')}><div class="main"><div class="t">{#if d.icon}<span class="h-icon">{@html iconSvg(d.icon, 20)}</span>{/if}{d.title}</div><div class="s">{d.description || 'No description'}</div></div><span class="chev">›</span></button>
+        <button type="button" class="list-row" onclick={() => go('/new/3')}><div class="main"><div class="t">{d.title}{#if d.icon}<span class="h-icon">{@html iconSvg(d.icon, 20)}</span>{/if}</div><div class="s">{d.description || 'No description'}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/1')}><div class="main"><div class="t">{d.dates.length} {d.dates.length === 1 ? 'day' : 'days'}</div><div class="s">{d.dates.map((x) => fmtDate(x)).join(', ')}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/2')}><div class="main"><div class="t">Your times</div><div class="s">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h selected · hours ${hoursLabel}` : `Nothing selected yet · hours ${hoursLabel}`}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/4')}><div class="main"><div class="t">{d.plannerName}</div><div class="s">{d.plannerEmail}</div></div><span class="chev">›</span></button>
@@ -237,8 +236,7 @@
   .linkcard .who { font-weight: 700; display: flex; gap: 8px; align-items: center; }
   .linkcard code { font-size: 12px; word-break: break-all; color: var(--text-3); font-family: ui-monospace, Menlo, monospace; }
   .opt { border-top: 1px solid var(--line); }
-  .h-icon { display: inline-block; vertical-align: -3px; margin-right: 8px; color: var(--accent); }
-  .tile { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid oklch(0.80 0.14 215 / .4); color: var(--accent); margin-bottom: 16px; }
+  .h-icon { display: inline-block; vertical-align: -3px; margin-left: 8px; color: var(--accent); }
   .inline-link { color: var(--accent); font-weight: 700; text-decoration: underline; }
   @media (min-width: 900px) {
     .screen.column.wide { max-width: 960px; }
