@@ -259,7 +259,7 @@
   <div class="screen column">
     <div class="top"><span></span></div>
     <div class="body">
-      <div><span class="label">You're invited</span><h1 style="margin-top:8px">{meetup.title}</h1><p class="lead">{planner.name} wants to know when you're free. First, what should we call you?</p></div>
+      <div><span class="label">You're invited</span>{#if meetup.icon}<div class="tile">{@html iconSvg(meetup.icon, 34)}</div>{/if}<h1 style="margin-top:8px">{meetup.title}</h1><p class="lead">{planner.name} wants to know when you're free. First, what should we call you?</p></div>
       {#if error}<div class="msg error">{error}</div>{/if}
       <div class="field"><label for="nm">Your name</label><input id="nm" type="text" bind:value={nameInput} onkeydown={(e) => e.key === 'Enter' && saveName()} autocomplete="given-name" /></div>
     </div>
@@ -300,7 +300,7 @@
             {:else if activeTab === 'people'}
               <h2>People</h2><div class="sub">{answeredLine}</div>
             {:else}
-              <h2>Settings</h2><div class="sub">{meetup.title}</div>
+              <h2>Settings</h2><div class="sub">{#if meetup.icon}<span class="h-icon" style="vertical-align:-3px">{@html iconSvg(meetup.icon, 16)}</span>{/if}{meetup.title}</div>
             {/if}
           </div>
           <div class="row" style="gap:8px">
@@ -428,6 +428,7 @@
     <button type="button" class="btn sm" disabled={busy || !fTitle.trim()} onclick={() => saveSettings({ title: fTitle, description: fDesc, icon: fIcon })}>Save</button>
   </Sheet>
   <Sheet open={deleteOpen} onclose={() => (deleteOpen = false)} title="Delete">
+    {#if meetup.icon}<div class="tile" style="margin:0 auto">{@html iconSvg(meetup.icon, 34)}</div>{/if}
     <h2 style="text-align:center">Delete “{meetup.title}”?</h2>
     <p class="muted" style="text-align:center;font-size:15px">This removes it for everyone. All {people.length} links stop working and everyone's selected times are gone. {data.mail_configured ? 'Invitees get a short email saying it\'s off.' : ''} This can't be undone.</p>
     <button type="button" class="btn danger sm" disabled={busy} onclick={doDelete}>{busy ? 'Deleting…' : 'Delete for everyone'}</button>
@@ -459,6 +460,7 @@
 <style>
   .center-screen { min-height: 100dvh; display: grid; place-items: center; }
   .h-icon { display: inline-block; vertical-align: -4px; margin-right: 8px; color: var(--accent); }
+  .tile { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid oklch(0.80 0.14 215 / .4); color: var(--accent); margin: 12px 0 4px; }
   .shell { height: 100dvh; display: flex; flex-direction: column; position: relative; }
   .side { display: none; }
   .main { flex: 1; min-height: 0; display: flex; flex-direction: column; }

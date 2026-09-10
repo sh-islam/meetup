@@ -84,7 +84,8 @@
     <div class="top"><span></span><span class="label">Done</span></div>
     <div class="body">
       <div>
-        <h1>{#if created.meetup.icon}<span class="h-icon">{@html iconSvg(created.meetup.icon, 28)}</span>{/if}“{created.meetup.title}” is ready</h1>
+        {#if created.meetup.icon}<div class="tile">{@html iconSvg(created.meetup.icon, 34)}</div>{/if}
+        <h1>“{created.meetup.title}” is ready</h1>
         <p class="lead">{created.mail_configured ? 'Invites are on their way. Your planner link was emailed to you too.' : 'Email isn’t set up on the server yet, so nothing was sent. Share the links below yourself.'}</p>
       </div>
       <div class="msg info">Meetups you create or open are saved on this device and listed on the Meetup home screen. <button type="button" class="inline-link" onclick={() => (saveOpen = true)}>Bookmark or install</button> to get back even faster.</div>
@@ -230,6 +231,7 @@
   .linkcard code { font-size: 12px; word-break: break-all; color: var(--text-3); font-family: ui-monospace, Menlo, monospace; }
   .opt { border-top: 1px solid var(--line); }
   .h-icon { display: inline-block; vertical-align: -3px; margin-right: 8px; color: var(--accent); }
+  .tile { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; background: var(--accent-soft); border: 1px solid oklch(0.80 0.14 215 / .4); color: var(--accent); margin-bottom: 16px; }
   .inline-link { color: var(--accent); font-weight: 700; text-decoration: underline; }
   @media (min-width: 900px) {
     .screen.column.wide { max-width: 960px; }
