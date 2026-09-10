@@ -126,7 +126,7 @@
     {#if hiding.role === 'planner'}
       <h2 style="text-align:center">Delete “{hiding.title}”?</h2>
       <p class="caption" style="text-align:center">You're the planner. Deleting removes the meetup for everyone. You'll confirm on the next screen.</p>
-      <button type="button" class="btn danger sm" onclick={() => { const t = hiding.token; hiding = null; go(`/m/${t}/settings`) }}>Continue to delete…</button>
+      <button type="button" class="btn danger sm" onclick={() => { const t = hiding.token; hiding = null; go(`/m/${t}/settings/delete`) }}>Continue to delete…</button>
     {:else}
       <h2 style="text-align:center">Drop out of “{hiding.title}”?</h2>
       <p class="caption" style="text-align:center">This tells the planner and takes you off the meetup. To only tidy this list, use hide instead.</p>

@@ -23,6 +23,6 @@
   <OpenMeetup />
 {:else if route.page === 'meetup'}
   {#key route.token}
-    <Meetup token={route.token} tab={route.tab} />
+    <Meetup token={route.token} tab={route.tab} action={route.action} />
   {/key}
 {/if}

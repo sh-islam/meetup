@@ -17,7 +17,7 @@
   import { SLOT_MIN, addMinutes, fmtBlock, fmtDate, fmtTime, localTimezone, slotDate, slotKey, slotMinutes, tzLabel } from '../lib/time.js'
   import { copyText, go, isWide, rememberMeetup, forgetMeetup } from '../lib/store.js'
 
-  let { token, tab = 'times' } = $props()
+  let { token, tab = 'times', action = '' } = $props()
 
   let data = $state(null)
   let loading = $state(true)
@@ -112,6 +112,10 @@
     } catch (e) { error = e.message } finally { loading = false }
   }
   $effect(() => { token; load() })
+  // deep link: #/m/<token>/settings/delete opens the delete confirmation straight away
+  $effect(() => {
+    if (action === 'delete' && data && isPlanner) { deleteOpen = true; go(`/m/${token}/settings`, true) }
+  })
   $effect(() => { if (isPlanner && activeTab === 'best') loadStats() })
 
   function say(msg) { toast = msg; clearTimeout(toastTimer); toastTimer = setTimeout(() => (toast = ''), 3200) }
