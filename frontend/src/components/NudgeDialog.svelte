@@ -3,7 +3,7 @@
   import MapPicker from './MapPicker.svelte'
   import { fmtBlock, tzLabel } from '../lib/time.js'
   import { iconSvg } from '../lib/icons.js'
-  let { meetup, planner, people = [], confirmedNames = [], responded = 0, best = null, isPlanner = false, onclose = () => {}, onsave = () => {} } = $props()
+  let { meetup, planner, people = [], confirmedNames = [], responded = 0, best = null, isPlanner = false, onclose = () => {}, onsave = () => {}, ondropout = () => {} } = $props()
 </script>
 
 {#if meetup.icon}<div class="tile">{@html iconSvg(meetup.icon, 34)}</div>{/if}
@@ -28,6 +28,7 @@
   <div class="hint">Faded names have yet to respond.</div>
 </div>
 <button type="button" class="btn ghost sm" onclick={onsave}>Save this meetup</button>
+{#if !isPlanner}<button type="button" class="link danger-text" onclick={ondropout}>Drop out of this meetup</button>{/if}
 <button type="button" class="link" onclick={onclose}>Close</button>
 
 <style>

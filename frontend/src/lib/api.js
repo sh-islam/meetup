@@ -43,5 +43,6 @@ export const api = {
   confirm: (start, end) => req('POST', '/meetups/me/confirm', { start, end }),
   reopen: () => req('POST', '/meetups/me/reopen'),
   deleteMeetup: () => req('DELETE', '/meetups/me'),
+  leave: () => req('POST', '/meetups/me/leave'),
   nudge: (participant_id, start, end) => req('POST', '/meetups/me/nudge', { participant_id, start, end }),
 }

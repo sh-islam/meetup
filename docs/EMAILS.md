@@ -11,6 +11,7 @@ All seven emails are approved as of 2026-09-10. Every subject is prefixed "Meetu
 | meetup_updated  | each invitee   | planner changes dates/hours/details    | what changed, personal link |
 | confirmed       | everyone       | planner confirms a block               | final date/time, location, who is coming, .ics attached |
 | cancelled       | each invitee   | planner deletes the meetup             | title, planner name, that the link is dead |
+| dropped_out     | planner        | an invitee drops out                   | who left, remaining count, dashboard link |
 | nudge           | one invitee    | planner sends a nudge                  | % and names free at target block, Yes/No one-click buttons, link |
 
 
@@ -141,6 +142,17 @@ Hi {name},
 {planner_name} has cancelled "{title}". Your link for it no longer works.
 
 Sorry to bring bad news. Hopefully next time!
+
+### dropped_out  (DRAFT, not approved)
+Subject: Meetup: {name} dropped out of "{title}"
+
+{name} has dropped out of "{title}".
+
+Their times were removed and their link no longer works.
+{responded_count} of {people_count} people have answered so far.
+
+See the heatmap and best times:
+{planner_url}
 
 ## UI labels (approved 2026-09-09)
 - Home buttons: "New meetup" / "Existing meetup"

@@ -361,6 +361,29 @@ def confirm():
     return jsonify(meetup_view(db, meetup, g.participant))
 
 
+@bp.post("/meetups/me/leave")
+@require("invitee")
+def leave_meetup():
+    """An invitee drops out: their times and link go away; the planner is told by email."""
+    db = get_db()
+    m = g.meetup
+    me = g.participant
+    people = get_participants(db, m["id"])
+    planner = get_planner(people)
+    ctx = base_ctx(m, people, get_dates(db, m["id"]))
+    name = display_name(me)
+    db.execute("DELETE FROM participants WHERE id=?", (me["id"],))
+    db.commit()
+    remaining = get_participants(db, m["id"])
+    mailer.send(
+        "dropped_out", planner["email"], f'{name} dropped out of "{m["title"]}"',
+        dict(ctx, name=name, people_count=len(remaining),
+             responded_count=sum(1 for p in remaining if p["last_saved_at"])),
+        meetup_id=m["id"], participant_id=planner["id"],
+    )
+    return jsonify({"ok": True})
+
+
 @bp.delete("/meetups/me")
 @require("planner")
 def delete_meetup():

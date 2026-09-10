@@ -36,6 +36,7 @@
   let detailsOpen = $state(false)
   let saveOpen = $state(false)
   let deleteOpen = $state(false)
+  let dropOpen = $state(false)
   let decideOpen = $state(false)
   let selection = $state(null)
   let editing = $state(null)        // null | about | location | days | hours | mode
@@ -184,6 +185,15 @@
     busy = true; error = ''
     try { apply(await api.reopen()); editing = null; say('Reopened.') } catch (e) { error = e.message } finally { busy = false }
   }
+  async function doDropOut() {
+    busy = true; error = ''
+    try {
+      await api.leave()
+      forgetMeetup(token)
+      dropOpen = false
+      go('/')
+    } catch (e) { error = e.message; dropOpen = false } finally { busy = false }
+  }
   async function doDelete() {
     busy = true; error = ''
     try {
@@ -227,7 +237,7 @@
   const answeredLine = $derived(`${responded} of ${people.length} have answered`)
   const allAnswered = $derived(people.length > 1 && responded === people.length)
   const myUrl = $derived(`${location.origin}${location.pathname}#/m/${token}`)
-  const sheetOpen = $derived(detailsOpen || saveOpen || deleteOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
+  const sheetOpen = $derived(detailsOpen || saveOpen || deleteOpen || dropOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
 </script>
 
 {#snippet icon(name)}
@@ -392,7 +402,7 @@
   {#if toast}<div class="toast">{toast}</div>{/if}
 
   <Sheet open={detailsOpen} onclose={() => (detailsOpen = false)} title="Details">
-    <NudgeDialog {meetup} {planner} {people} {confirmedNames} {responded} best={data.best} {isPlanner} onclose={() => (detailsOpen = false)} onsave={() => { detailsOpen = false; saveOpen = true }} />
+    <NudgeDialog {meetup} {planner} {people} {confirmedNames} {responded} best={data.best} {isPlanner} onclose={() => (detailsOpen = false)} onsave={() => { detailsOpen = false; saveOpen = true }} ondropout={() => { detailsOpen = false; dropOpen = true }} />
   </Sheet>
 
   <Sheet open={saveOpen} onclose={() => (saveOpen = false)} title="Save">
@@ -426,6 +436,12 @@
     <div class="field"><label>Icon</label><IconPicker bind:value={fIcon} /></div>
     <div class="field"><label for="sd">Description</label><textarea id="sd" bind:value={fDesc}></textarea></div>
     <button type="button" class="btn sm" disabled={busy || !fTitle.trim()} onclick={() => saveSettings({ title: fTitle, description: fDesc, icon: fIcon })}>Save</button>
+  </Sheet>
+  <Sheet open={dropOpen} onclose={() => (dropOpen = false)} title="Drop out">
+    <h2 style="text-align:center">Drop out of “{meetup.title}”?</h2>
+    <p class="muted" style="text-align:center;font-size:15px">{planner.name} gets an email saying you're dropping out. Your times are removed and your link stops working. To rejoin later you'd need a new invite.</p>
+    <button type="button" class="btn danger sm" disabled={busy} onclick={doDropOut}>{busy ? 'Dropping out…' : 'Yes, drop out'}</button>
+    <button type="button" class="btn ghost sm" onclick={() => (dropOpen = false)}>Stay in</button>
   </Sheet>
   <Sheet open={deleteOpen} onclose={() => (deleteOpen = false)} title="Delete">
     {#if meetup.icon}<div class="tile" style="margin:0 auto">{@html iconSvg(meetup.icon, 34)}</div>{/if}

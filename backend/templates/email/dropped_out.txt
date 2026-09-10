@@ -1,0 +1,10 @@
+{{ name }} has dropped out of "{{ title }}".
+
+Their times were removed and their link no longer works.
+{{ responded_count }} of {{ people_count }} people have answered so far.
+
+See the heatmap and best times:
+{{ planner_url }}
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

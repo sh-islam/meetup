@@ -149,6 +149,15 @@ def test_full_flow(client):
     assert r.status_code == 200 and r.json["meetup"]["icon"] == "pizza"
     assert client.patch("/meetups/me", json={"icon": "nope"}, headers=hdr(planner_token)).status_code == 400
 
+    # an invitee drops out: planner emailed, their link dies, they vanish from the meetup
+    assert client.post("/meetups/me/leave", headers=hdr(planner_token)).status_code == 403
+    assert client.post("/meetups/me/leave", headers=hdr(priya_token)).status_code == 200
+    assert client.get("/meetups/me", headers=hdr(priya_token)).status_code == 401
+    r = client.get("/meetups/me", headers=hdr(planner_token))
+    assert [p["name"] for p in r.json["participants"]] == ["Sam", "Alex"]
+    log = open(config.MAIL_LOG, encoding="utf-8").read()
+    assert 'Subject: Meetup: priya dropped out of "Board game night!"' in log
+
     # invitee can't delete; planner can; links die; invitees emailed
     assert client.delete("/meetups/me", headers=hdr(alex_token)).status_code == 403
     assert client.delete("/meetups/me", headers=hdr(planner_token)).status_code == 200

@@ -1,11 +1,25 @@
 <script>
   import { go, loadRecent, forgetMeetup, copyText, loadHidden, hideMeetup, restoreMeetup } from '../lib/store.js'
-  import { probe } from '../lib/api.js'
+  import { probe, api, setToken } from '../lib/api.js'
   import { iconSvg } from '../lib/icons.js'
   import Sheet from '../components/Sheet.svelte'
   let recent = $state(loadRecent())
-  let hiding = $state(null)     // the entry being hidden
+  let hiding = $state(null)     // the entry being acted on
   let copied = $state(false)
+  let dropStep = $state(false)  // second confirmation for dropping out
+  let busy = $state(false)
+  let toast = $state('')
+  function say(m) { toast = m; setTimeout(() => (toast = ''), 3200) }
+  async function dropOut() {
+    busy = true
+    try {
+      setToken(hiding.token)
+      await api.leave()
+      forgetMeetup(hiding.token); recent = loadRecent(); hidden = loadHidden()
+      say(`You dropped out of ${hiding.title}. The planner has been told.`)
+      hiding = null; dropStep = false
+    } catch (e) { say(e.message) } finally { busy = false }
+  }
   const linkFor = (t) => `${location.origin}${location.pathname}#/m/${t}`
   async function copy() { if (await copyText(linkFor(hiding.token))) { copied = true; setTimeout(() => (copied = false), 1500) } }
   function confirmHide() { hideMeetup(hiding.token); recent = loadRecent(); hidden = loadHidden(); hiding = null }
@@ -43,7 +57,7 @@
         {#each recent as m (m.token)}
           <div class="list-row">
             <button type="button" class="main rbtn" onclick={() => go(`/m/${m.token}`)}><div class="t">{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}{m.title}</div><div class="s">{m.role === 'planner' ? 'You planned this' : 'You were invited'}</div></button>
-            <button type="button" class="icon-btn" onclick={() => (hiding = m)} aria-label="Hide from this list">×</button>
+            <button type="button" class="icon-btn trash" onclick={() => { hiding = m; dropStep = false }} aria-label="Remove or drop out"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
           </div>
         {/each}
       </div>
@@ -83,26 +97,37 @@
   <button type="button" class="link" onclick={() => (restoreOpen = false)}>Close</button>
 </Sheet>
 
-<Sheet open={!!hiding} onclose={() => (hiding = null)} title="Hide">
-  {#if hiding}
-    <h2 style="text-align:center">Hide from this list?</h2>
-    {#if hiding.role === 'planner'}
-      <div class="msg error">You're the planner of this meetup. Without the link you can't manage or confirm it, so copy it somewhere safe first.</div>
-    {:else}
-      <p class="caption" style="text-align:center">The meetup isn't affected. You'll need the link from your email to open it again.</p>
-    {/if}
+<Sheet open={!!hiding} onclose={() => (hiding = null)} title="Remove">
+  {#if hiding && dropStep}
+    <h2 style="text-align:center">Drop out of “{hiding.title}”?</h2>
+    <p class="muted" style="text-align:center;font-size:15px">The planner gets an email saying you're dropping out. Your times are removed and your link stops working. To rejoin later you'd need a new invite.</p>
+    <button type="button" class="btn danger sm" disabled={busy} onclick={dropOut}>{busy ? 'Dropping out…' : 'Yes, drop out'}</button>
+    <button type="button" class="link" onclick={() => (dropStep = false)}>Back</button>
+  {:else if hiding}
+    <h2 style="text-align:center">{hiding.title}</h2>
     <div class="glass" style="padding:16px;text-align:left">
       <div style="font-weight:700">{#if hiding.icon}<span class="h-icon">{@html iconSvg(hiding.icon, 18)}</span>{/if}{hiding.title}</div>
       <div class="caption" style="margin-top:2px">{hiding.role === 'planner' ? 'You planned this' : 'You were invited'}</div>
       <code class="link">{linkFor(hiding.token)}</code>
     </div>
     <button type="button" class="btn ghost sm" onclick={copy}>{copied ? 'Copied' : 'Copy link'}</button>
-    <button type="button" class="btn danger sm" onclick={confirmHide}>Hide from this list</button>
-    <button type="button" class="link" onclick={() => (hiding = null)}>Keep it</button>
+    {#if hiding.role === 'planner'}
+      <div class="msg error">You're the planner. Hiding only tidies this list, but without the link you can't manage the meetup, so copy it first.</div>
+      <button type="button" class="btn ghost sm" onclick={confirmHide}>Hide from this device</button>
+      <button type="button" class="btn danger sm" onclick={() => { const t = hiding.token; hiding = null; go(`/m/${t}/settings`) }}>Delete the meetup…</button>
+    {:else}
+      <p class="caption" style="text-align:center">Hiding only removes it from this device. Dropping out tells the planner and takes you off the meetup.</p>
+      <button type="button" class="btn ghost sm" onclick={confirmHide}>Hide from this device</button>
+      <button type="button" class="btn danger sm" onclick={() => (dropStep = true)}>Drop out of the meetup</button>
+    {/if}
+    <button type="button" class="link" onclick={() => (hiding = null)}>Cancel</button>
   {/if}
 </Sheet>
+{#if toast}<div class="toast">{toast}</div>{/if}
 
 <style>
+  .trash { color: var(--danger); opacity: .8; }
+  .trash:hover { opacity: 1; }
   .restore { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 5; font-size: 13px; font-weight: 700; color: var(--text-3); padding: 10px 14px; border-radius: 999px; background: var(--glass); border: 1px solid var(--edge); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
   .restore:hover { color: var(--text); }
   code.link { display: block; margin-top: 10px; font-size: 12px; word-break: break-all; color: var(--text-3); font-family: ui-monospace, Menlo, monospace; }

@@ -1,0 +1,6 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;"><strong>{{ name }}</strong> has dropped out of "<strong>{{ title }}</strong>".</p>
+<p style="margin:0 0 14px;">Their times were removed and their link no longer works.<br />{{ responded_count }} of {{ people_count }} people have answered so far.</p>
+<p style="margin:0 0 6px;"><a href="{{ planner_url }}" style="display:inline-block;padding:11px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Open my dashboard</a></p>
+{% endblock %}
