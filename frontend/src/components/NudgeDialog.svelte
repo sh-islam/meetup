@@ -24,7 +24,7 @@
   <div class="chips">
     {#each people as p (p.id)}<span class="chip solo" class:dim={!p.responded}><span class="txt">{p.name}{p.role === 'planner' ? ' · planner' : ''}</span></span>{/each}
   </div>
-  <div class="hint">Faded names haven't answered yet.</div>
+  <div class="hint">Faded names have yet to respond.</div>
 </div>
 <button type="button" class="btn ghost sm" onclick={onsave}>Save this meetup</button>
 <button type="button" class="link" onclick={onclose}>Close</button>
