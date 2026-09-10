@@ -9,7 +9,7 @@ export function parseHash() {
   if (parts.length === 0) return { page: 'home' }
   if (parts[0] === 'new') return { page: 'new', step: parts[1] || '1' }
   if (parts[0] === 'open') return { page: 'open' }
-  if (parts[0] === 'm' && parts[1]) return { page: 'meetup', token: parts[1], tab: parts[2] || 'times' }
+  if (parts[0] === 'm' && parts[1]) return { page: 'meetup', token: parts[1], tab: parts[2] || 'times', action: parts[3] || '' }
   return { page: 'home' }
 }
 
