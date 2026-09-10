@@ -10,7 +10,7 @@
   import Sheet from '../components/Sheet.svelte'
   import SaveSheet from '../components/SaveSheet.svelte'
   import { api } from '../lib/api.js'
-  import { localTimezone, slotDate, slotMinutes, fmtDate, fmtTime, tzLabel } from '../lib/time.js'
+  import { localTimezone, slotDate, slotMinutes, fmtDate, fmtTime, tzLabel, slotsToBlocks, fmtBlock } from '../lib/time.js'
   import { go, back, copyText, loadDraft, saveDraft, clearDraft, rememberMeetup } from '../lib/store.js'
 
   let { step = '1' } = $props()
@@ -45,6 +45,8 @@
     else if (n >= 5 && !(d.plannerName.trim() && d.plannerEmail.trim())) go('/new/4', true)
   })
 
+  const blocks = $derived(slotsToBlocks(d.mySlots))
+  const hoursSelected = $derived(d.mySlots.length * 15 / 60)
   const hoursLabel = $derived(`${fmtTime(d.hourStart * 60, true)} to ${d.hourEnd === 24 ? 'midnight' : fmtTime(d.hourEnd * 60, true)}`)
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
@@ -144,8 +146,15 @@
       </div>
       <div class="row between">
         <button type="button" class="chip" onclick={() => (hoursOpen = true)}><span class="txt">Hours: {hoursLabel}</span><span class="x" aria-hidden="true">›</span></button>
-        <span class="caption">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h selected` : ''}</span>
       </div>
+      {#if blocks.length}
+        <div class="picked">
+          <div class="label" style="margin-bottom:6px">Times selected</div>
+          {#each blocks.slice(0, 4) as b (b.start)}<div class="pick">{fmtBlock(b.start, b.end)}</div>{/each}
+          {#if blocks.length > 4}<div class="pick muted">and {blocks.length - 4} more</div>{/if}
+          <div class="caption" style="margin-top:6px">{hoursSelected}h selected</div>
+        </div>
+      {/if}
       <div class="gridbox">
         <TimeGrid dates={d.dates} hourStart={d.hourStart} hourEnd={d.hourEnd} bind:mySlots={d.mySlots} fill />
       </div>
@@ -231,6 +240,8 @@
 <style>
   .fixed { height: 100dvh; }
   .fixed .body { min-height: 0; }
+  .picked { margin-top: -8px; }
+  .pick { font-size: 15px; font-weight: 600; line-height: 1.5; }
   .gridbox { flex: 1; min-height: 0; display: flex; flex-direction: column; margin: 0 calc(var(--pad) * -1); }
   .linkcard { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
   .linkcard .who { font-weight: 700; display: flex; gap: 8px; align-items: center; }
