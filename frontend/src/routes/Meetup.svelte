@@ -304,7 +304,7 @@
             {/if}
           </div>
           <div class="row" style="gap:8px">
-            {#if activeTab === 'times'}<button type="button" class="disclose phone-only" onclick={() => (detailsOpen = true)} aria-label="Details"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>{/if}
+            {#if activeTab === 'times'}<button type="button" class="disclose phone-only" onclick={() => (detailsOpen = true)} aria-label="Details"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>{/if}
           </div>
         </div>
         {#if confirmed && activeTab === 'times'}
@@ -312,7 +312,7 @@
         {/if}
         {#if error}<div class="msg error">{error}</div>{/if}
         {#if activeTab === 'times'}
-          <div class="row between">
+          <div class="legend-row">
             {@render legend()}
             {#if isPlanner && !confirmed}<button type="button" class="btn sm auto confirm-btn" class:ghost={!allAnswered} class:lit={allAnswered} onclick={openDecide}>Confirm</button>{/if}
           </div>
@@ -466,8 +466,9 @@
   .title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .min0 { min-width: 0; }
   .sub { color: var(--text-2); font-size: 15px; font-weight: 500; margin-top: 4px; }
-  .disclose { flex: none; width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--glass); border: 1px solid var(--edge); color: var(--text-2); }
-  .confirm-btn { height: 40px; padding: 0 16px; flex: none; transition: background .3s, box-shadow .3s, color .3s; }
+  .disclose { flex: none; width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--glass); border: 1px solid var(--edge); color: var(--text-2); }
+  .legend-row { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .confirm-btn { height: 36px; padding: 0 16px; font-size: 14px; border-radius: 12px; flex: none; transition: background .3s, box-shadow .3s, color .3s; }
   .confirm-btn.lit { animation: lit-in .6s ease-out; }
   .lit-line { transition: color .3s; }
   .lit-line.lit { color: var(--accent); font-weight: 700; }
@@ -498,6 +499,8 @@
     .side .sub { font-size: 14px; }
     .mhead { padding: 24px 32px 16px; }
     .mhead .title-row .min0 h2 { font-size: 22px; }
+    .legend-row { flex-direction: row; align-items: center; justify-content: space-between; }
+    .confirm-btn { height: 40px; font-size: 15px; }
     .phone-only { display: none !important; }
     .times-area { flex-direction: row; gap: 24px; margin: 0 32px 32px; min-height: 0; }
     .gridbox { margin: 0; border: 1px solid var(--edge); border-radius: 16px; overflow: hidden; }
