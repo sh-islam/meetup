@@ -10,7 +10,7 @@
     <svg viewBox="0 0 512 512" width="64" height="64"><rect width="512" height="512" rx="116" fill="oklch(0.19 0.04 265)"/><rect x="1" y="1" width="510" height="510" rx="115" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"/><g><rect x="88" y="88" width="96" height="96" rx="22" fill="#fff" fill-opacity=".08"/><rect x="208" y="88" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity=".22"/><rect x="328" y="88" width="96" height="96" rx="22" fill="#fff" fill-opacity=".08"/><rect x="88" y="208" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity=".22"/><rect x="208" y="208" width="96" height="96" rx="22" fill="#5ee6ff"/><rect x="328" y="208" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity=".45"/><rect x="88" y="328" width="96" height="96" rx="22" fill="#fff" fill-opacity=".08"/><rect x="208" y="328" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity=".45"/><rect x="328" y="328" width="96" height="96" rx="22" fill="#5ef0b8"/></g></svg>
   </div>
   <h1>Meet<span>up</span></h1>
-  <p class="lead">Find the time when everyone's free.<br />No accounts, just a link.</p>
+  <p class="lead">Find the time when everyone's free.<br />No accounts required.</p>
   <div class="actions">
     <button type="button" class="btn" onclick={() => go('/new/1')}>New meetup</button>
     <button type="button" class="btn ghost" onclick={() => go('/open')}>Existing meetup</button>
