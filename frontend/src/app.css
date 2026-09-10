@@ -49,8 +49,8 @@ body {
   background: transparent;
   overscroll-behavior-y: none;
 }
-/* background glow + slow drift; the sheen sweeps once every 12s. Home page only (body.home). */
-body.home::before {
+/* background glow + slow drift: every page. The sweep (::after) is home page only (body.home). */
+body::before {
   content: ''; position: fixed; inset: -20%; z-index: -2; pointer-events: none;
   background:
     radial-gradient(40% 30% at 78% 8%, oklch(0.80 0.14 215 / .18), transparent 70%),
@@ -65,7 +65,7 @@ body.home::after {
 }
 @keyframes drift { from { transform: translate3d(-2%, -1%, 0) scale(1); opacity: .85; } to { transform: translate3d(2%, 2%, 0) scale(1.06); opacity: 1; } }
 @keyframes sheen { 0% { background-position: 120% 0; } 20% { background-position: -30% 0; } 100% { background-position: -30% 0; } }
-@media (prefers-reduced-motion: reduce) { body.home::before, body.home::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { body::before, body.home::after { animation: none; } }
 
 a { color: var(--accent); text-decoration: none; }
 h1, h2, h3, p { margin: 0; }
