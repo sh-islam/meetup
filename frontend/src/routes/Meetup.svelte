@@ -180,7 +180,7 @@
     } catch (e) { error = e.message } finally { busy = false }
   }
   async function doReopen() {
-    if (!confirm('Undo the confirmation? People can paint again. Nobody is emailed.')) return
+    if (!confirm('Undo the confirmation? People can select times again. Nobody is emailed.')) return
     busy = true; error = ''
     try { apply(await api.reopen()); editing = null; say('Reopened.') } catch (e) { error = e.message } finally { busy = false }
   }

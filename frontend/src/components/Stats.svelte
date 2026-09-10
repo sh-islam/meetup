@@ -10,7 +10,7 @@
   <p class="muted">Loading…</p>
 {:else}
   {#if !stats.windows.length}
-    <div class="glass card"><p class="muted">Nobody has painted any times yet. Best times appear here once they do.</p></div>
+    <div class="glass card"><p class="muted">Nobody has selected any times yet. Best times appear here once they do.</p></div>
   {:else}
     <div class="wins">
       {#each stats.windows as w, i (w.start + w.end)}
