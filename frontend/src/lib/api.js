@@ -20,6 +20,15 @@ async function req(method, path, body) {
   return data
 }
 
+// Does a meetup still exist for this token? Resolves to the view, or null if the link is dead.
+export async function probe(tok) {
+  let r
+  try { r = await fetch(API + '/meetups/me', { headers: { 'X-Meetup-Token': tok } }) } catch { throw new Error('unreachable') }
+  if (r.status === 401 || r.status === 404) return null
+  if (!r.ok) throw new Error('unreachable')
+  return await r.json()
+}
+
 export const api = {
   health: () => req('GET', '/health'),
   createMeetup: (body) => req('POST', '/meetups', body),

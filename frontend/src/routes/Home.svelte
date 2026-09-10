@@ -1,5 +1,6 @@
 <script>
-  import { go, loadRecent, forgetMeetup, copyText } from '../lib/store.js'
+  import { go, loadRecent, forgetMeetup, copyText, loadHidden, hideMeetup, restoreMeetup } from '../lib/store.js'
+  import { probe } from '../lib/api.js'
   import { iconSvg } from '../lib/icons.js'
   import Sheet from '../components/Sheet.svelte'
   let recent = $state(loadRecent())
@@ -7,7 +8,22 @@
   let copied = $state(false)
   const linkFor = (t) => `${location.origin}${location.pathname}#/m/${t}`
   async function copy() { if (await copyText(linkFor(hiding.token))) { copied = true; setTimeout(() => (copied = false), 1500) } }
-  function confirmHide() { forgetMeetup(hiding.token); recent = loadRecent(); hiding = null }
+  function confirmHide() { hideMeetup(hiding.token); recent = loadRecent(); hidden = loadHidden(); hiding = null }
+
+  // ---- restore hidden ----
+  let hidden = $state(loadHidden())
+  let restoreOpen = $state(false)
+  let status = $state({})        // token -> checking | ok | gone | unreachable
+  async function openRestore() {
+    restoreOpen = true
+    hidden = loadHidden()
+    for (const m of hidden) {
+      status[m.token] = 'checking'
+      try { status[m.token] = (await probe(m.token)) ? 'ok' : 'gone' } catch { status[m.token] = 'unreachable' }
+    }
+  }
+  function restore(m) { restoreMeetup(m.token); hidden = loadHidden(); recent = loadRecent(); if (!hidden.length) restoreOpen = false }
+  function discard(m) { forgetMeetup(m.token); hidden = loadHidden() }
 </script>
 
 <div class="home">
@@ -35,6 +51,38 @@
   {/if}
 </div>
 
+{#if hidden.length}
+  <button type="button" class="restore" onclick={openRestore}>Restore hidden ({hidden.length})</button>
+{/if}
+
+<Sheet open={restoreOpen} onclose={() => (restoreOpen = false)} title="Restore">
+  <h2 style="text-align:center">Hidden meetups</h2>
+  <p class="caption" style="text-align:center">Only meetups that still exist can be restored.</p>
+  <div class="glass" style="padding:4px 16px;text-align:left">
+    {#each hidden as m (m.token)}
+      <div class="list-row">
+        <div class="main">
+          <div class="t">{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}{m.title}</div>
+          <div class="s">
+            {#if status[m.token] === 'checking'}Checking…
+            {:else if status[m.token] === 'ok'}{m.role === 'planner' ? 'You planned this' : 'You were invited'}
+            {:else if status[m.token] === 'gone'}<span class="danger-text">{m.role === 'planner' ? 'Deleted' : 'The planner deleted this meetup'}</span>
+            {:else}Could not reach the server{/if}
+          </div>
+        </div>
+        {#if status[m.token] === 'ok'}
+          <button type="button" class="btn ghost sm auto" onclick={() => restore(m)}>Restore</button>
+        {:else if status[m.token] === 'gone'}
+          <button type="button" class="icon-btn" onclick={() => discard(m)} aria-label="Remove">×</button>
+        {/if}
+      </div>
+    {:else}
+      <div class="list-row"><div class="main"><div class="s">Nothing hidden.</div></div></div>
+    {/each}
+  </div>
+  <button type="button" class="link" onclick={() => (restoreOpen = false)}>Close</button>
+</Sheet>
+
 <Sheet open={!!hiding} onclose={() => (hiding = null)} title="Hide">
   {#if hiding}
     <h2 style="text-align:center">Hide from this list?</h2>
@@ -55,6 +103,8 @@
 </Sheet>
 
 <style>
+  .restore { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 5; font-size: 13px; font-weight: 700; color: var(--text-3); padding: 10px 14px; border-radius: 999px; background: var(--glass); border: 1px solid var(--edge); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .restore:hover { color: var(--text); }
   code.link { display: block; margin-top: 10px; font-size: 12px; word-break: break-all; color: var(--text-3); font-family: ui-monospace, Menlo, monospace; }
   .home { min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px var(--pad) calc(24px + env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; }
   .mark { margin-bottom: 24px; filter: drop-shadow(0 16px 40px oklch(0.80 0.14 215 / .25)); }

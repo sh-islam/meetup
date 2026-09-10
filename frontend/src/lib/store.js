@@ -84,7 +84,29 @@ export function rememberMeetup({ token, title, role, icon = '' }) {
   } catch { /* ignore */ }
 }
 export function forgetMeetup(token) {
-  try { localStorage.setItem(RECENT, JSON.stringify(loadRecent().filter((m) => m.token !== token))) } catch { /* ignore */ }
+  try {
+    localStorage.setItem(RECENT, JSON.stringify(loadRecent().filter((m) => m.token !== token)))
+    localStorage.setItem(HIDDEN, JSON.stringify(loadHidden().filter((m) => m.token !== token)))
+  } catch { /* ignore */ }
+}
+// hidden = taken off the home list but kept, so it can be restored
+const HIDDEN = 'meetup.hidden.v1'
+export function loadHidden() {
+  try { return JSON.parse(localStorage.getItem(HIDDEN) || '[]') } catch { return [] }
+}
+export function hideMeetup(token) {
+  try {
+    const entry = loadRecent().find((m) => m.token === token)
+    localStorage.setItem(RECENT, JSON.stringify(loadRecent().filter((m) => m.token !== token)))
+    if (entry) localStorage.setItem(HIDDEN, JSON.stringify([entry, ...loadHidden().filter((m) => m.token !== token)].slice(0, 30)))
+  } catch { /* ignore */ }
+}
+export function restoreMeetup(token) {
+  try {
+    const entry = loadHidden().find((m) => m.token === token)
+    localStorage.setItem(HIDDEN, JSON.stringify(loadHidden().filter((m) => m.token !== token)))
+    if (entry) rememberMeetup(entry)
+  } catch { /* ignore */ }
 }
 
 // ---- PWA install prompt (Chrome on Android / desktop) ----
