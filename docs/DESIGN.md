@@ -75,8 +75,8 @@ collecting -> confirmed (or cancelled). Confirmed meetups are read-only for invi
 
 
 ## UI v2 - Midnight Glass (2026-09-10)
-Decided after the v1 review ("too much info per screen on mobile"). Mockup: frontend/public/mock/midnight-glass.html
-(https://sh-islam.github.io/meetup/mock/midnight-glass.html). Tokens live in frontend/src/app.css header comment.
+Decided after the v1 review ("too much info per screen on mobile"). Mockup (removed 2026-09-10 once the app matched it)
+. Tokens live in frontend/src/app.css header comment.
 
 - Theme: single-hue navy ground with a slow background drift + 12s highlight sweep (off under reduced-motion),
   frosted glass panels, cyan accent, mint for "you". Manrope. 8pt rhythm, 24px screen margins, 44px+ targets.
