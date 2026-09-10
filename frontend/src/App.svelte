@@ -6,6 +6,8 @@
   import Meetup from './routes/Meetup.svelte'
 
   let route = $state(parseHash())
+  // shimmer (glow drift + sweep) only on the home page
+  $effect(() => { document.body.classList.toggle('home', route.page === 'home') })
   $effect(() => {
     const onHash = () => { route = parseHash() }
     window.addEventListener('hashchange', onHash)

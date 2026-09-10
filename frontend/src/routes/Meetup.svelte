@@ -225,6 +225,7 @@
   const hoursLabel = $derived(meetup ? `${fmtTime(meetup.hour_start * 60, true)} to ${meetup.hour_end === 24 ? 'midnight' : fmtTime(meetup.hour_end * 60, true)}` : '')
   const responded = $derived(people.filter((p) => p.responded).length)
   const answeredLine = $derived(`${responded} of ${people.length} have answered`)
+  const allAnswered = $derived(people.length > 1 && responded === people.length)
   const myUrl = $derived(`${location.origin}${location.pathname}#/m/${token}`)
   const sheetOpen = $derived(detailsOpen || saveOpen || deleteOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
 </script>
@@ -272,7 +273,7 @@
       <div>
         <h2>{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 22)}</span>{/if}{meetup.title}</h2>
         <div class="sub">Planned by {isPlanner ? 'you' : planner.name} · {people.length} people{meetup.location ? ` · ${meetup.location}` : ''}</div>
-        <div class="sub" style="margin-top:2px">{answeredLine}</div>
+        <div class="sub lit-line" class:lit={allAnswered} style="margin-top:2px">{answeredLine}</div>
         <button type="button" class="link" onclick={() => (detailsOpen = true)}>Details</button>
       </div>
       {#if isPlanner}
@@ -293,7 +294,7 @@
             {#if activeTab === 'times'}
               <h2>{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 22)}</span>{/if}{meetup.title}</h2>
               <div class="sub">Planned by {isPlanner ? 'you' : planner.name} · {people.length} people{meetup.location ? ` · ${meetup.location}` : ''}</div>
-              <div class="sub" style="margin-top:2px">{answeredLine}</div>
+              <div class="sub lit-line" class:lit={allAnswered} style="margin-top:2px">{answeredLine}</div>
             {:else if activeTab === 'best'}
               <h2>Best times</h2><div class="sub">{answeredLine}</div>
             {:else if activeTab === 'people'}
@@ -313,7 +314,7 @@
         {#if activeTab === 'times'}
           <div class="row between">
             {@render legend()}
-            {#if isPlanner && !confirmed}<button type="button" class="btn ghost sm auto confirm-btn" onclick={openDecide}>Confirm</button>{/if}
+            {#if isPlanner && !confirmed}<button type="button" class="btn sm auto confirm-btn" class:ghost={!allAnswered} class:lit={allAnswered} onclick={openDecide}>Confirm</button>{/if}
           </div>
         {/if}
       </header>
@@ -466,7 +467,11 @@
   .min0 { min-width: 0; }
   .sub { color: var(--text-2); font-size: 15px; font-weight: 500; margin-top: 4px; }
   .disclose { flex: none; width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--glass); border: 1px solid var(--edge); color: var(--text-2); }
-  .confirm-btn { height: 40px; padding: 0 16px; flex: none; }
+  .confirm-btn { height: 40px; padding: 0 16px; flex: none; transition: background .3s, box-shadow .3s, color .3s; }
+  .confirm-btn.lit { animation: lit-in .6s ease-out; }
+  .lit-line { transition: color .3s; }
+  .lit-line.lit { color: var(--accent); font-weight: 700; }
+  @keyframes lit-in { 0% { box-shadow: 0 0 0 0 oklch(0.80 0.14 215 / .6); } 100% { box-shadow: 0 8px 24px oklch(0.80 0.14 215 / .28); } }
   .times-area { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   .gridbox { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   .panel { display: none; }

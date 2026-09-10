@@ -49,15 +49,15 @@ body {
   background: transparent;
   overscroll-behavior-y: none;
 }
-/* background glow + slow drift; the sheen sweeps once every 12s. Background only. */
-body::before {
+/* background glow + slow drift; the sheen sweeps once every 12s. Home page only (body.home). */
+body.home::before {
   content: ''; position: fixed; inset: -20%; z-index: -2; pointer-events: none;
   background:
     radial-gradient(40% 30% at 78% 8%, oklch(0.80 0.14 215 / .18), transparent 70%),
     radial-gradient(35% 28% at 15% 85%, oklch(0.70 0.12 280 / .14), transparent 70%);
   animation: drift 26s ease-in-out infinite alternate;
 }
-body::after {
+body.home::after {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background: linear-gradient(115deg, transparent 38%, oklch(1 0 0 / .10) 50%, transparent 62%);
   background-size: 250% 100%;
@@ -65,7 +65,7 @@ body::after {
 }
 @keyframes drift { from { transform: translate3d(-2%, -1%, 0) scale(1); opacity: .85; } to { transform: translate3d(2%, 2%, 0) scale(1.06); opacity: 1; } }
 @keyframes sheen { 0% { background-position: 120% 0; } 20% { background-position: -30% 0; } 100% { background-position: -30% 0; } }
-@media (prefers-reduced-motion: reduce) { body::before, body::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { body.home::before, body.home::after { animation: none; } }
 
 a { color: var(--accent); text-decoration: none; }
 h1, h2, h3, p { margin: 0; }
