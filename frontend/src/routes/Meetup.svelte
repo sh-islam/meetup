@@ -467,7 +467,7 @@
   .min0 { min-width: 0; }
   .sub { color: var(--text-2); font-size: 15px; font-weight: 500; margin-top: 4px; }
   .disclose { flex: none; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--glass); border: 1px solid var(--edge); color: var(--text-2); }
-  .legend-row { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .legend-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .confirm-btn { height: 36px; padding: 0 16px; font-size: 14px; border-radius: 12px; flex: none; transition: background .3s, box-shadow .3s, color .3s; }
   .confirm-btn.lit { animation: lit-in .6s ease-out; }
   .lit-line { transition: color .3s; }
