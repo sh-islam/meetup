@@ -24,7 +24,7 @@
 </script>
 
 <h2 style="text-align:center">Save this meetup</h2>
-<p class="caption" style="text-align:center">Your link is already remembered on this device, so the Meetup home screen will list it. To get back even faster:</p>
+<p class="caption" style="text-align:center">Meetups you create or open are saved on this device and listed on the Meetup home screen. To get back even faster:</p>
 <div class="stack" style="gap:8px">
   <button type="button" class="btn ghost sm" onclick={copy}>{copied ? 'Copied' : 'Copy link'}</button>
   {#if canShare}<button type="button" class="btn ghost sm" onclick={share}>Share or add to reading list…</button>{/if}
