@@ -11,7 +11,7 @@ Dates on the table:
   {{ d }}
 {% endfor %}
 
-Open your personal link and paint the times that work for you:
+Open your personal link and select the times that work for you:
 {{ url }}
 
 No account needed. This link is yours alone, so please don't forward it.

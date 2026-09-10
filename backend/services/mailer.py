@@ -19,6 +19,8 @@ def send(kind, to_email, subject, ctx, meetup_id=None, participant_id=None, atta
     attachments: list of (filename, mimetype, bytes).
     Returns 'sent' | 'logged' | 'failed'.
     """
+    if not subject.startswith("Meetup: "):
+        subject = "Meetup: " + subject
     ctx = dict(ctx, subject=subject)
     text = render_template(f"email/{kind}.txt", **ctx)
     html = render_template(f"email/{kind}.html", **ctx)

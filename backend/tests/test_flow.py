@@ -81,7 +81,7 @@ def test_full_flow(client):
     r = client.put("/meetups/me/availability", json={"slots": slots}, headers=hdr(alex_token))
     assert r.status_code == 200 and len(r.json["my_slots"]) == 8
     log = open(config.MAIL_LOG, encoding="utf-8").read()
-    assert 'Alex sent their availability for "Board game night"' in log
+    assert 'Subject: Meetup: Alex sent their availability for "Board game night"' in log
     assert f"{D20}: 7:00 PM to 9:00 PM" in log
 
     # out-of-range slot rejected

@@ -1,7 +1,7 @@
 # Email wording (to approve before shipping)
 
 Each email has a subject, an HTML body and a plain-text body. Placeholders in {braces}.
-Nothing below is final; every line gets owner sign-off.
+All seven emails are approved as of 2026-09-10. Every subject is prefixed "Meetup: " by the mailer.
 
 | kind            | to             | when                                   | must include |
 |-----------------|----------------|----------------------------------------|--------------|
@@ -18,8 +18,8 @@ Nothing below is final; every line gets owner sign-off.
 
 Placeholders in {braces}. Every email also gets a one-line footer: "Sent by Meetup on behalf of {planner_name}."
 
-### planner_link
-Subject: Your planner link for "{title}"
+### planner_link  (approved 2026-09-10)
+Subject: Meetup: Your planner link for "{title}"
 
 Hi {planner_name},
 
@@ -30,8 +30,8 @@ This is your planner link. Keep it to yourself, anyone with it can change the me
 
 You'll get an email each time someone sends their availability.
 
-### invite
-Subject: {planner_name} wants to meet up: {title}
+### invite  (approved 2026-09-10)
+Subject: Meetup: {planner_name} wants to meet up: {title}
 
 Hi {name},
 
@@ -42,7 +42,7 @@ Hi {name},
 Dates on the table:
 {date_list}
 
-Open your personal link and paint the times that work for you:
+Open your personal link and select the times that work for you:
 {url}
 
 No account needed. This link is yours alone, so please don't forward it.
@@ -51,8 +51,8 @@ No account needed. This link is yours alone, so please don't forward it.
 Sent to the planner on "Send my availability", and on either nudge button.
 
 Normal save / after nudge Yes:
-Subject (normal): {name} sent their availability for "{title}"
-Subject (after Yes): {name} said yes to {weekday} {date} at {start}
+Subject (normal): Meetup: {name} sent their availability for "{title}"
+Subject (after Yes): Meetup: {name} said yes to {weekday} {date} at {start}
 
 {nudge_line}
    after Yes:   {name} said yes to your nudge for {weekday} {date} at {start}.
@@ -68,7 +68,7 @@ See the heatmap and best times:
 {planner_url}
 
 After nudge No (short form, availability unchanged):
-Subject: {name} said no to {weekday} {date} at {start}
+Subject: Meetup: {name} said no to {weekday} {date} at {start}
 
 {name} said no to your nudge for {weekday} {date} at {start} for "{title}".
 Their times are unchanged.
@@ -76,8 +76,8 @@ Their times are unchanged.
 See the heatmap and best times:
 {planner_url}
 
-### meetup_updated
-Subject: "{title}" was updated
+### meetup_updated  (approved 2026-09-10)
+Subject: Meetup: "{title}" was updated
 
 Hi {name},
 
@@ -90,8 +90,8 @@ Hi {name},
 Please check that your times still fit:
 {url}
 
-### confirmed
-Subject: It's on: {title}, {weekday} {date} at {start}
+### confirmed  (approved 2026-09-10)
+Subject: Meetup: It's on: {title}, {weekday} {date} at {start}
 
 Hi {name},
 
@@ -106,7 +106,7 @@ Who's coming: {attendee_names}
 A calendar file is attached. See you there!
 
 ### nudge  (approved 2026-09-09)
-Subject: Can you make {weekday} {date} at {start}? ({title})
+Subject: Meetup: Can you make {weekday} {date} at {start}? ({title})
 
 Hi {name},
 
@@ -134,7 +134,7 @@ Behaviour:
 - invitee_count includes everyone invited plus the planner, so the nudged person is in the denominator.
 
 ### cancelled  (approved 2026-09-10)
-Subject: "{title}" is off
+Subject: Meetup: "{title}" is off
 
 Hi {name},
 
