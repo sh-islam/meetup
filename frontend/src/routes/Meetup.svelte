@@ -267,6 +267,7 @@
     <div class="body" style="justify-content:center">
       <div><h1>Can't open this meetup</h1><p class="lead">{error}</p></div>
       <a class="btn ghost" href="#/open">Try another link</a>
+      <a class="btn ghost" href="#/">Return to home</a>
     </div>
   </div>
 {:else if me.name === null}
