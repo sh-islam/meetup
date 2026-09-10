@@ -1,0 +1,22 @@
+{% extends "email/_base.html" %}
+{% block content %}
+{% if no_form %}
+<p style="margin:0 0 14px;">{{ nudge_line }}</p>
+<p style="margin:0 0 14px;">Their times are unchanged.</p>
+{% else %}
+{% if nudge_line %}
+<p style="margin:0 0 14px;padding:10px 14px;background:#ecfdf5;border-radius:8px;color:#065f46;">{{ nudge_line }}</p>
+{% endif %}
+<p style="margin:0 0 6px;"><strong>{{ name }}</strong> is free:</p>
+<ul style="margin:0 0 18px;padding-left:20px;">
+{% for w in windows %}
+  <li>{{ w }}</li>
+{% else %}
+  <li style="color:#6b7280;">(no times painted)</li>
+{% endfor %}
+</ul>
+<p style="margin:0 0 14px;">{{ responded_count }} of {{ people_count }} people have answered so far.</p>
+{% endif %}
+<p style="margin:0 0 14px;">See the heatmap and best times:</p>
+<p style="margin:0 0 6px;"><a href="{{ planner_url }}" style="display:inline-block;padding:11px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Open my dashboard</a></p>
+{% endblock %}

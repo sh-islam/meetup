@@ -1,0 +1,20 @@
+Hi {{ name }},
+
+{{ planner_name }} is planning "{{ title }}" and wants to know when you're free.
+{% if description %}
+
+{{ description }}
+{% endif %}
+
+Dates on the table:
+{% for d in date_list %}
+  {{ d }}
+{% endfor %}
+
+Open your personal link and paint the times that work for you:
+{{ url }}
+
+No account needed. This link is yours alone, so please don't forward it.
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

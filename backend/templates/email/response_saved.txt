@@ -1,0 +1,23 @@
+{% if no_form %}
+{{ nudge_line }}
+Their times are unchanged.
+{% else %}
+{% if nudge_line %}
+{{ nudge_line }}
+
+{% endif %}
+{{ name }} is free:
+{% for w in windows %}
+  {{ w }}
+{% else %}
+  (no times painted)
+{% endfor %}
+
+{{ responded_count }} of {{ people_count }} people have answered so far.
+{% endif %}
+
+See the heatmap and best times:
+{{ planner_url }}
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

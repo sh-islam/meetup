@@ -1,0 +1,18 @@
+Hi {{ name }},
+
+"{{ title }}" is confirmed.
+
+When: {{ label.weekday }}, {{ label.date }}, {{ label.start }} to {{ label.end }} ({{ timezone }})
+Where: {{ location or "To be announced" }}
+Who's coming: {{ attendee_names | join(", ") if attendee_names else "nobody has marked this time yet" }}
+{% if description %}
+
+{{ description }}
+{% endif %}
+
+A calendar file is attached. See you there!
+
+{{ url }}
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

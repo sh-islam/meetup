@@ -1,0 +1,18 @@
+Hi {{ name }},
+
+{{ planner_name }} is trying to lock in "{{ title }}".
+
+{{ available_percent }}% of people ({{ available_count }} of {{ people_count }}) are available on
+{{ label.weekday }} {{ label.date }} from {{ label.start }} to {{ label.end }}.
+Available people are {{ other_names }}, and you're the missing piece.
+
+Any chance you could move things around to make that work?
+
+  Yes, I can make it:  {{ yes_url }}
+  No, I can't:         {{ no_url }}
+
+Or open your times and adjust them yourself:
+{{ url }}
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

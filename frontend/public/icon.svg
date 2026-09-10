@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Meetup icon: a navy glass tile with a 3x3 availability grid, the hot spot lit cyan and "you" in mint -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a2342"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.78" cy="0.12" r="0.7">
+      <stop offset="0" stop-color="#44d9f5" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#44d9f5" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6ee7ff"/>
+      <stop offset="1" stop-color="#22c5e6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#glow)"/>
+  <rect x="1" y="1" width="510" height="510" rx="115" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="2"/>
+  <!-- grid: 3 columns x 3 rows, 96px cells, 24px gaps, centred -->
+  <g>
+    <!-- row 1 -->
+    <rect x="88"  y="88"  width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.08"/>
+    <rect x="208" y="88"  width="96" height="96" rx="22" fill="#44d9f5" fill-opacity="0.22"/>
+    <rect x="328" y="88"  width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.08"/>
+    <!-- row 2 -->
+    <rect x="88"  y="208" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity="0.22"/>
+    <rect x="208" y="208" width="96" height="96" rx="22" fill="url(#hot)"/>
+    <rect x="328" y="208" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity="0.45"/>
+    <!-- row 3 -->
+    <rect x="88"  y="328" width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.08"/>
+    <rect x="208" y="328" width="96" height="96" rx="22" fill="#44d9f5" fill-opacity="0.45"/>
+    <rect x="328" y="328" width="96" height="96" rx="22" fill="#5ef0b8"/>
+  </g>
+</svg>

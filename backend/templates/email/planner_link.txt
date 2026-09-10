@@ -1,0 +1,11 @@
+Hi {{ planner_name }},
+
+"{{ title }}" is set up and invites are on their way to {{ invited_count }} people.
+
+This is your planner link. Keep it to yourself, anyone with it can change the meetup:
+{{ planner_url }}
+
+You'll get an email each time someone sends their availability.
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

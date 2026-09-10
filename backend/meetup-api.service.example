@@ -1,0 +1,13 @@
+[Unit]
+Description=Meetup API (Flask/gunicorn)
+After=network.target
+
+[Service]
+User=<user>
+WorkingDirectory=/path/to/meetup/backend
+EnvironmentFile=/path/to/meetup/backend/.env
+ExecStart=/path/to/meetup/backend/.venv/bin/gunicorn -w 2 -b ${BIND} "app:create_app()"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

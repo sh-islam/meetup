@@ -1,0 +1,16 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;">Hi {{ name }},</p>
+<p style="margin:0 0 14px;"><strong>{{ planner_name }}</strong> is trying to lock in "<strong>{{ title }}</strong>".</p>
+<p style="margin:0 0 14px;"><strong>{{ available_percent }}%</strong> of people ({{ available_count }} of {{ people_count }}) are available on <strong>{{ label.weekday }} {{ label.date }}</strong> from <strong>{{ label.start }} to {{ label.end }}</strong>.<br>
+Available people are {{ other_names }}, and you're the missing piece.</p>
+<p style="margin:0 0 18px;">Any chance you could move things around to make that work?</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
+  <tr>
+    <td style="padding:0 10px 0 0;"><a href="{{ yes_url }}" style="display:inline-block;padding:12px 20px;background:#16a34a;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Yes, I can make it</a></td>
+    <td><a href="{{ no_url }}" style="display:inline-block;padding:12px 20px;background:#f3f4f6;color:#1c1f24;text-decoration:none;border-radius:8px;font-weight:600;">No, I can't</a></td>
+  </tr>
+</table>
+<p style="margin:0 0 6px;color:#6b7280;font-size:14px;">Or open your times and adjust them yourself:</p>
+<p style="margin:0;font-size:13px;word-break:break-all;"><a href="{{ url }}" style="color:#2563eb;">{{ url }}</a></p>
+{% endblock %}

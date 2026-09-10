@@ -1,0 +1,9 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;">Hi {{ planner_name }},</p>
+<p style="margin:0 0 14px;">"<strong>{{ title }}</strong>" is set up and invites are on their way to {{ invited_count }} people.</p>
+<p style="margin:0 0 14px;">This is your planner link. Keep it to yourself, anyone with it can change the meetup:</p>
+<p style="margin:0 0 18px;"><a href="{{ planner_url }}" style="display:inline-block;padding:11px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Open my dashboard</a></p>
+<p style="margin:0 0 14px;color:#6b7280;font-size:13px;word-break:break-all;">{{ planner_url }}</p>
+<p style="margin:0;">You'll get an email each time someone sends their availability.</p>
+{% endblock %}

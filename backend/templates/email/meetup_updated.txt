@@ -1,0 +1,12 @@
+Hi {{ name }},
+
+{{ planner_name }} changed the plan for "{{ title }}":
+{% for c in changes %}
+  {{ c }}
+{% endfor %}
+
+Please check that your times still fit:
+{{ url }}
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

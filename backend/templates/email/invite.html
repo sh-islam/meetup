@@ -1,0 +1,18 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;">Hi {{ name }},</p>
+<p style="margin:0 0 14px;"><strong>{{ planner_name }}</strong> is planning "<strong>{{ title }}</strong>" and wants to know when you're free.</p>
+{% if description %}
+<p style="margin:0 0 14px;white-space:pre-line;color:#374151;">{{ description }}</p>
+{% endif %}
+<p style="margin:0 0 6px;">Dates on the table:</p>
+<ul style="margin:0 0 18px;padding-left:20px;">
+{% for d in date_list %}
+  <li>{{ d }}</li>
+{% endfor %}
+</ul>
+<p style="margin:0 0 14px;">Open your personal link and paint the times that work for you:</p>
+<p style="margin:0 0 18px;"><a href="{{ url }}" style="display:inline-block;padding:11px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Pick my times</a></p>
+<p style="margin:0 0 14px;color:#6b7280;font-size:13px;word-break:break-all;">{{ url }}</p>
+<p style="margin:0;color:#6b7280;font-size:14px;">No account needed. This link is yours alone, so please don't forward it.</p>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;">Hi {{ name }},</p>
+<p style="margin:0 0 18px;font-size:18px;">"<strong>{{ title }}</strong>" is confirmed.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 18px;font-size:15px;">
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">When</td><td style="padding:4px 0;"><strong>{{ label.weekday }}, {{ label.date }}</strong>, {{ label.start }} to {{ label.end }} <span style="color:#6b7280;">({{ timezone }})</span></td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">Where</td><td style="padding:4px 0;">{{ location or "To be announced" }}</td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;vertical-align:top;">Who's coming</td><td style="padding:4px 0;">{{ attendee_names | join(", ") if attendee_names else "nobody has marked this time yet" }}</td></tr>
+</table>
+{% if description %}
+<p style="margin:0 0 18px;white-space:pre-line;color:#374151;">{{ description }}</p>
+{% endif %}
+<p style="margin:0 0 14px;">A calendar file is attached. See you there!</p>
+<p style="margin:0 0 6px;"><a href="{{ url }}" style="display:inline-block;padding:11px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Open the meetup</a></p>
+{% endblock %}

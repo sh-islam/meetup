@@ -1,0 +1,11 @@
+backend/.env
+backend/.venv/
+backend/*.db
+backend/__pycache__/
+frontend/node_modules/
+frontend/dist/
+.screens/
+backend/mail.log
+frontend/package-lock.json.bak
+backend/meetup-api.service.local
+backend/*.service.local

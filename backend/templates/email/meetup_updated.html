@@ -1,0 +1,12 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;">Hi {{ name }},</p>
+<p style="margin:0 0 6px;"><strong>{{ planner_name }}</strong> changed the plan for "<strong>{{ title }}</strong>":</p>
+<ul style="margin:0 0 18px;padding-left:20px;">
+{% for c in changes %}
+  <li>{{ c }}</li>
+{% endfor %}
+</ul>
+<p style="margin:0 0 14px;">Please check that your times still fit:</p>
+<p style="margin:0 0 6px;"><a href="{{ url }}" style="display:inline-block;padding:11px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Check my times</a></p>
+{% endblock %}
