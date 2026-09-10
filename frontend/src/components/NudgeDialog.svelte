@@ -31,6 +31,7 @@
 <button type="button" class="link" onclick={onclose}>Close</button>
 
 <style>
+  .h-icon { display: inline-block; vertical-align: -3px; margin-left: 8px; color: var(--accent); }
   .desc { white-space: pre-line; font-size: 16px; line-height: 1.5; color: var(--text); }
   .facts { padding: 4px 16px; }
   .fact { display: flex; flex-direction: column; gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--line); }
