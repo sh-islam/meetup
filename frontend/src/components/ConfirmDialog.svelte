@@ -69,7 +69,7 @@
   </div>
   <div class="who">
     <div class="faces">
-      {#each participants as p (p.id)}<span class="face" class:off={!availSet.has(p.id)}>{initial(p.name)}</span>{/each}
+      {#each participants as p (p.id)}<span class="face" class:off={!availSet.has(p.id)} title={p.email ? `${p.name} · ${p.email}` : p.name}>{initial(p.name)}</span>{/each}
     </div>
     <div><b>{free.length} of {participants.length} free</b>{#if missing.length} <span class="muted">· missing {names(missing)}</span>{/if}</div>
   </div>

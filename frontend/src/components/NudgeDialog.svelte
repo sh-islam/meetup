@@ -22,7 +22,7 @@
 <div>
   <div class="label" style="margin-bottom:8px">Who's invited</div>
   <div class="chips">
-    {#each people as p (p.id)}<span class="chip solo" class:dim={!p.responded}><span class="txt">{p.name}{p.role === 'planner' ? ' · planner' : ''}</span></span>{/each}
+    {#each people as p (p.id)}<span class="chip solo" class:dim={!p.responded} title={p.email || p.name}><span class="txt">{p.name}{p.role === 'planner' ? ' · planner' : ''}</span></span>{/each}
   </div>
   <div class="hint">Faded names have yet to respond.</div>
 </div>

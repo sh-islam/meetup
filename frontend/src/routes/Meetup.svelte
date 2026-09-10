@@ -354,7 +354,7 @@
         <div class="page">
           <div class="glass" style="padding:4px 20px">
             {#each people as p (p.id)}
-              <button type="button" class="list-row" onclick={() => (person = p)}>
+              <button type="button" class="list-row" title={p.email || p.name} onclick={() => (person = p)}>
                 <div class="main"><div class="t">{p.name} {#if p.role === 'planner'}<span class="badge">planner</span>{/if}</div>
                   <div class="s">{#if p.responded}<span class="mint-text">answered</span>{:else}not yet{/if}{#if p.nudge} · {nudgeLabel(p.nudge)}{/if}</div></div>
                 <span class="chev">›</span>

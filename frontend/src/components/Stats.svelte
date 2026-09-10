@@ -20,7 +20,7 @@
           <div class="meta">{dur(w.minutes)} · {#if w.missing.length}<span class="miss">missing {w.missing.join(', ')}</span>{:else}<span class="mint-text">everyone</span>{/if}</div>
           <div class="faces">
             {#each participants as p (p.id)}
-              <span class="face" class:off={!w.available.includes(p.name)}>{initial(p.name)}</span>
+              <span class="face" class:off={!w.available.includes(p.name)} title={p.email ? `${p.name} · ${p.email}` : p.name}>{initial(p.name)}</span>
             {/each}
           </div>
         </button>
