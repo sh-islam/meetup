@@ -10,7 +10,7 @@
   import Sheet from '../components/Sheet.svelte'
   import SaveSheet from '../components/SaveSheet.svelte'
   import { api } from '../lib/api.js'
-  import { localTimezone, slotDate, slotMinutes, fmtDate, fmtTime } from '../lib/time.js'
+  import { localTimezone, slotDate, slotMinutes, fmtDate, fmtTime, tzLabel } from '../lib/time.js'
   import { go, back, copyText, loadDraft, saveDraft, clearDraft, rememberMeetup } from '../lib/store.js'
 
   let { step = '1' } = $props()
@@ -26,6 +26,7 @@
   let created = $state(null)
   let copied = $state('')
   const timezone = localTimezone()
+  const tzText = $derived(tzLabel(timezone, d.dates[0]))
   const TOTAL = 6
   const n = $derived(parseInt(step, 10) || 1)
 
@@ -148,7 +149,7 @@
   </div>
   <Sheet open={hoursOpen} onclose={() => (hoursOpen = false)} title="Hours to show">
     <h2 style="text-align:center">Hours to show</h2>
-    <p class="caption" style="text-align:center">Everyone sees this range on the grid. Times are in {timezone}.</p>
+    <p class="caption" style="text-align:center">Everyone sees this range on the grid. Times are in {tzText}.</p>
     <HourRange bind:hourStart={d.hourStart} bind:hourEnd={d.hourEnd} />
     <button type="button" class="btn sm" onclick={() => (hoursOpen = false)}>Done</button>
   </Sheet>
@@ -214,7 +215,7 @@
           </div>
         {/if}
       </div>
-      <p class="caption">Times are in {timezone}.</p>
+      <p class="caption">Times are in {tzText}.</p>
     </div>
     <div class="bottom"><button type="button" class="btn" disabled={busy} onclick={create}>{busy ? 'Creating…' : 'Create meetup'}</button></div>
   </div>

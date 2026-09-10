@@ -60,6 +60,22 @@ export function localTimezone() {
   try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC' } catch { return 'UTC' }
 }
 
+// 'America/Toronto' + a date -> 'Toronto · Eastern Daylight Time (UTC−4)'
+export function tzLabel(tz, dateISO) {
+  if (!tz) return ''
+  const city = tz.split('/').pop().replace(/_/g, ' ')
+  const [y, m, d] = (dateISO || todayISO()).split('-').map(Number)
+  const at = new Date(Date.UTC(y, m - 1, d, 12))
+  let long = '', off = ''
+  try {
+    long = new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'long' }).formatToParts(at).find((p) => p.type === 'timeZoneName')?.value || ''
+    off = new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(at).find((p) => p.type === 'timeZoneName')?.value || ''
+  } catch { return tz }
+  off = off.replace('GMT', 'UTC').replace('-', '−')
+  if (off === 'UTC') off = 'UTC±0'
+  return `${city} · ${long} (${off})`
+}
+
 export function todayISO() {
   const d = new Date()
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`

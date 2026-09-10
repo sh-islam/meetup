@@ -1,7 +1,7 @@
 <script>
   // Details sheet body: who, where, what, progress, the best time so far, and the time-selection setting.
   import MapPicker from './MapPicker.svelte'
-  import { fmtBlock } from '../lib/time.js'
+  import { fmtBlock, tzLabel } from '../lib/time.js'
   import { iconSvg } from '../lib/icons.js'
   let { meetup, planner, people = [], confirmedNames = [], responded = 0, best = null, isPlanner = false, onclose = () => {}, onsave = () => {} } = $props()
 </script>
@@ -17,7 +17,7 @@
   <div class="fact"><span class="caption">Answered</span><b>{responded} of {people.length}</b></div>
   <div class="fact"><span class="caption">Best time so far</span>{#if best}<b>{fmtBlock(best.start, best.end)}</b><span class="caption">{best.count} of {best.total} free · {best.percent}%</span>{:else}<b class="muted">Nobody has answered yet</b>{/if}</div>
   <div class="fact"><span class="caption">Time selection</span><b>{meetup.paint_mode === 'free' ? 'Anyone can select any time' : `Only the times ${isPlanner ? 'I' : planner.name} picked`}</b></div>
-  <div class="fact"><span class="caption">Timezone</span><b>{meetup.timezone}</b></div>
+  <div class="fact"><span class="caption">Timezone</span><b>{tzLabel(meetup.timezone, meetup.dates[0])}</b></div>
 </div>
 <div>
   <div class="label" style="margin-bottom:8px">Who's invited</div>

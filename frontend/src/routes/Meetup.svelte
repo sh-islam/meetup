@@ -14,7 +14,7 @@
   import IconPicker from '../components/IconPicker.svelte'
   import { iconSvg } from '../lib/icons.js'
   import { api, setToken } from '../lib/api.js'
-  import { SLOT_MIN, addMinutes, fmtBlock, fmtDate, fmtTime, localTimezone, slotDate, slotKey, slotMinutes } from '../lib/time.js'
+  import { SLOT_MIN, addMinutes, fmtBlock, fmtDate, fmtTime, localTimezone, slotDate, slotKey, slotMinutes, tzLabel } from '../lib/time.js'
   import { copyText, go, isWide, rememberMeetup, forgetMeetup } from '../lib/store.js'
 
   let { token, tab = 'times' } = $props()
@@ -63,7 +63,7 @@
   const people = $derived(data ? data.participants : [])
   const planner = $derived(people.find((p) => p.role === 'planner'))
   const allowed = $derived(meetup && meetup.paint_mode === 'restricted' && !isPlanner ? data.planner_slots : null)
-  const tzNote = $derived(meetup && localTimezone() !== meetup.timezone ? `Times are in ${meetup.timezone}.` : '')
+  const tzNote = $derived(meetup && localTimezone() !== meetup.timezone ? `Times are in ${tzLabel(meetup.timezone, meetup.dates[0])}.` : '')
   const activeTab = $derived(isPlanner ? tab : 'times')
 
   // heatmap that reflects my unsaved painting
