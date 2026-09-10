@@ -304,7 +304,7 @@
     <div class="main">
       <!-- phone header -->
       <header class="mhead">
-        <div class="title-row">
+        <div class="title-row" class:phone-only={activeTab === 'times'}>
           <div class="min0">
             {#if activeTab === 'times'}
               <h2>{meetup.title}{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 22)}</span>{/if}</h2>
@@ -523,6 +523,7 @@
     .legend-row { flex-direction: row; align-items: center; justify-content: space-between; }
     .confirm-btn { height: 40px; font-size: 15px; }
     .phone-only { display: none !important; }
+    .mhead { padding-top: 20px; }
     .times-area { flex-direction: row; gap: 24px; margin: 0 32px 32px; min-height: 0; }
     .gridbox { margin: 0; border: 1px solid var(--edge); border-radius: 16px; overflow: hidden; }
     .panel { display: flex; flex-direction: column; gap: 16px; width: 360px; flex: none; padding: 24px; align-self: flex-start; max-height: 100%; overflow: auto; }
