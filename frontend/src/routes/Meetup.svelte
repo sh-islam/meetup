@@ -304,7 +304,7 @@
             {/if}
           </div>
           <div class="row" style="gap:8px">
-            {#if activeTab === 'times'}<button type="button" class="disclose phone-only" onclick={() => (detailsOpen = true)} aria-label="Details"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>{/if}
+            {#if activeTab === 'times'}<button type="button" class="disclose phone-only" onclick={() => (detailsOpen = true)} aria-label="Details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>{/if}
           </div>
         </div>
         {#if confirmed && activeTab === 'times'}
@@ -466,7 +466,7 @@
   .title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .min0 { min-width: 0; }
   .sub { color: var(--text-2); font-size: 15px; font-weight: 500; margin-top: 4px; }
-  .disclose { flex: none; width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--glass); border: 1px solid var(--edge); color: var(--text-2); }
+  .disclose { flex: none; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--glass); border: 1px solid var(--edge); color: var(--text-2); }
   .legend-row { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
   .confirm-btn { height: 36px; padding: 0 16px; font-size: 14px; border-radius: 12px; flex: none; transition: background .3s, box-shadow .3s, color .3s; }
   .confirm-btn.lit { animation: lit-in .6s ease-out; }
