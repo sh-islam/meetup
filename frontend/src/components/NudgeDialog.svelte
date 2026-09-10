@@ -16,7 +16,7 @@
 {/if}
 <div class="glass facts">
   <div class="fact"><span class="caption">Answered</span><b>{responded} of {people.length}</b></div>
-  <div class="fact"><span class="caption">Best time so far</span>{#if best}<b>{fmtBlock(best.start, best.end)}</b><span class="caption">{best.count} of {best.total} free · {best.percent}%</span>{:else}<b class="muted">Nobody has answered yet</b>{/if}</div>
+  <div class="fact"><span class="caption">Best time so far</span>{#if best}<b>{fmtBlock(best.start, best.end)}</b><span class="caption">{best.count} of {best.total} free · {best.percent}%</span>{:else}<b class="muted">No times selected yet</b>{/if}</div>
   <div class="fact"><span class="caption">Time selection</span><b>{meetup.paint_mode === 'free' ? 'Anyone can select any time' : `Only the times ${isPlanner ? 'I' : planner.name} picked`}</b></div>
   <div class="fact"><span class="caption">Timezone</span><b>{tzLabel(meetup.timezone, meetup.dates[0])}</b></div>
 </div>
