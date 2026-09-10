@@ -133,7 +133,7 @@ Behaviour:
 - After the meetup is confirmed the buttons land on "This meetup is already confirmed."
 - invitee_count includes everyone invited plus the planner, so the nudged person is in the denominator.
 
-### cancelled  (DRAFT, not approved)
+### cancelled  (approved 2026-09-10)
 Subject: "{title}" is off
 
 Hi {name},
