@@ -45,7 +45,7 @@
 <style>
   .wins { display: flex; flex-direction: column; gap: 12px; }
   .win { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "when ring" "meta ring" "faces faces"; gap: 6px 16px; padding: 20px; align-items: center; text-align: left; width: 100%; color: var(--text); }
-  .win:hover { background: var(--glass-2); }
+  @media (hover: hover) { .win:hover { background: var(--glass-2); } }
   .win.best { border-color: oklch(0.80 0.14 215 / .5); background: oklch(0.80 0.14 215 / .08); }
   .when { grid-area: when; font-size: 17px; font-weight: 700; }
   .meta { grid-area: meta; font-size: 13px; color: var(--text-2); font-weight: 500; }

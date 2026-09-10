@@ -78,7 +78,7 @@
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
   .dow { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-3); letter-spacing: .04em; height: 32px; line-height: 32px; }
   .day { height: 44px; display: grid; place-items: center; border-radius: 12px; font-size: 16px; font-weight: 600; color: var(--text); }
-  .day:hover:not(:disabled) { background: var(--glass-2); }
+  @media (hover: hover) { .day:hover:not(:disabled):not(.on) { background: var(--glass-2); } }
   .day.past { color: var(--text-3); }
   .day.today { box-shadow: inset 0 0 0 1px var(--edge-2); }
   .day.on { background: var(--accent); color: var(--accent-ink); font-weight: 800; }

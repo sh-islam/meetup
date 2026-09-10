@@ -35,7 +35,7 @@
 *::-webkit-scrollbar { width: 6px; height: 6px; }
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb { background: oklch(1 0 0 / .14); border-radius: 999px; }
-*:hover::-webkit-scrollbar-thumb { background: oklch(1 0 0 / .26); }
+@media (hover: hover) { *:hover::-webkit-scrollbar-thumb { background: oklch(1 0 0 / .26); } }
 *::-webkit-scrollbar-corner { background: transparent; }
 
 html, body { margin: 0; min-height: 100%; }
@@ -95,7 +95,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 button:disabled { opacity: .45; cursor: default; }
 .btn { font-weight: 700; font-size: 17px; height: 52px; width: 100%; border-radius: 16px; border: 0; background: var(--accent); color: var(--accent-ink); display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 24px oklch(0.80 0.14 215 / .28); transition: transform .08s, filter .12s; padding: 0 20px; }
 .btn:active:not(:disabled) { transform: scale(.985); }
-.btn:hover:not(:disabled) { filter: brightness(1.06); }
+@media (hover: hover) { .btn:hover:not(:disabled) { filter: brightness(1.06); } }
 .btn.mint { background: var(--mint); color: var(--mint-ink); box-shadow: 0 8px 24px oklch(0.84 0.16 160 / .28); }
 .btn.ghost { background: var(--glass-2); color: var(--text); box-shadow: none; border: 1px solid var(--edge); }
 .btn.danger { background: oklch(0.72 0.19 20 / .16); color: oklch(0.9 0.1 20); box-shadow: none; border: 1px solid oklch(0.72 0.19 20 / .45); }
