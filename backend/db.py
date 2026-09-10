@@ -32,6 +32,10 @@ def init_db():
     conn = sqlite3.connect(config.DB_PATH)
     with open(os.path.join(config.BASE_DIR, "schema.sql"), encoding="utf-8") as f:
         conn.executescript(f.read())
+    # migrations for databases created before a column existed
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(meetups)").fetchall()}
+    if "icon" not in cols:
+        conn.execute("ALTER TABLE meetups ADD COLUMN icon TEXT NOT NULL DEFAULT ''")
     conn.commit()
     conn.close()
 

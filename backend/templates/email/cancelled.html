@@ -1,0 +1,6 @@
+{% extends "email/_base.html" %}
+{% block content %}
+<p style="margin:0 0 14px;">Hi {{ name }},</p>
+<p style="margin:0 0 14px;"><strong>{{ planner_name }}</strong> has cancelled "<strong>{{ title }}</strong>". Your link for it no longer works.</p>
+<p style="margin:0;">Sorry to bring bad news. Hopefully next time!</p>
+{% endblock %}

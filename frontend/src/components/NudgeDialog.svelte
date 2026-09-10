@@ -2,10 +2,11 @@
   // Details sheet body: who, where, what, progress, the best time so far, and the time-selection setting.
   import MapPicker from './MapPicker.svelte'
   import { fmtBlock } from '../lib/time.js'
+  import { iconSvg } from '../lib/icons.js'
   let { meetup, planner, people = [], confirmedNames = [], responded = 0, best = null, isPlanner = false, onclose = () => {}, onsave = () => {} } = $props()
 </script>
 
-<h2>{meetup.title}</h2>
+<h2>{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 22)}</span>{/if}{meetup.title}</h2>
 <div class="muted" style="font-size:15px">Planned by {planner.name} · {people.length} people</div>
 {#if meetup.location}<MapPicker location={meetup.location} readonly />{/if}
 {#if meetup.description}<p class="desc">{meetup.description}</p>{/if}
@@ -29,6 +30,7 @@
 <button type="button" class="link" onclick={onclose}>Close</button>
 
 <style>
+  .h-icon { display: inline-block; vertical-align: -4px; margin-right: 8px; color: var(--accent); }
   .desc { white-space: pre-line; font-size: 16px; line-height: 1.5; color: var(--text); }
   .facts { padding: 4px 16px; }
   .fact { display: flex; flex-direction: column; gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--line); }

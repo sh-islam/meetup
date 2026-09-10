@@ -1,0 +1,8 @@
+Hi {{ name }},
+
+{{ planner_name }} has cancelled "{{ title }}". Your link for it no longer works.
+
+Sorry to bring bad news. Hopefully next time!
+
+--
+Sent by Meetup on behalf of {{ planner_name }}.

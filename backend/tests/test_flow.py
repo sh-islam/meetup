@@ -140,3 +140,19 @@ def test_full_flow(client):
 
     # bad token
     assert client.get("/meetups/me", headers=hdr("nope")).status_code == 401
+
+    # icon accepted / rejected
+    r = client.patch("/meetups/me", json={"icon": "pizza"}, headers=hdr(planner_token))
+    assert r.status_code == 409  # confirmed meetups are locked
+    assert client.post("/meetups/me/reopen", headers=hdr(planner_token)).status_code == 200
+    r = client.patch("/meetups/me", json={"icon": "pizza"}, headers=hdr(planner_token))
+    assert r.status_code == 200 and r.json["meetup"]["icon"] == "pizza"
+    assert client.patch("/meetups/me", json={"icon": "nope"}, headers=hdr(planner_token)).status_code == 400
+
+    # invitee can't delete; planner can; links die; invitees emailed
+    assert client.delete("/meetups/me", headers=hdr(alex_token)).status_code == 403
+    assert client.delete("/meetups/me", headers=hdr(planner_token)).status_code == 200
+    assert client.get("/meetups/me", headers=hdr(alex_token)).status_code == 401
+    assert client.get("/meetups/me", headers=hdr(planner_token)).status_code == 401
+    log = open(config.MAIL_LOG, encoding="utf-8").read()
+    assert '"Board game night!" is off' in log

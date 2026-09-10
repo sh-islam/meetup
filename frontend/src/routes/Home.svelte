@@ -1,5 +1,6 @@
 <script>
   import { go, loadRecent, forgetMeetup } from '../lib/store.js'
+  import { iconSvg } from '../lib/icons.js'
   let recent = $state(loadRecent())
   function forget(t) { forgetMeetup(t); recent = loadRecent() }
 </script>
@@ -20,7 +21,7 @@
       <div class="glass" style="padding:4px 16px;text-align:left">
         {#each recent as m (m.token)}
           <div class="list-row">
-            <button type="button" class="main rbtn" onclick={() => go(`/m/${m.token}`)}><div class="t">{m.title}</div><div class="s">{m.role === 'planner' ? 'You planned this' : 'You were invited'}</div></button>
+            <button type="button" class="main rbtn" onclick={() => go(`/m/${m.token}`)}><div class="t">{#if m.icon}<span class="h-icon">{@html iconSvg(m.icon, 18)}</span>{/if}{m.title}</div><div class="s">{m.role === 'planner' ? 'You planned this' : 'You were invited'}</div></button>
             <button type="button" class="icon-btn" onclick={() => forget(m.token)} aria-label="Remove from this list">×</button>
           </div>
         {/each}
@@ -38,4 +39,5 @@
   .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; width: 100%; }
   .recent { width: 100%; margin-top: 40px; }
   .rbtn { text-align: left; }
+  .h-icon { display: inline-block; vertical-align: -3px; margin-right: 8px; color: var(--accent); }
 </style>

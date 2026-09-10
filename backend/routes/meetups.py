@@ -19,6 +19,15 @@ from tokens import new_token, require
 bp = Blueprint("meetups", __name__)
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+ICONS = {"", "dice-5", "gamepad-2", "pizza", "utensils", "coffee", "beer", "cake", "party-popper", "film",
+         "music", "dumbbell", "tent", "plane", "book-open"}
+
+
+def _clean_icon(i):
+    i = (i or "").strip()
+    if i not in ICONS:
+        abort(400, description="Unknown icon.")
+    return i
 
 
 # ---------- validation helpers ----------
@@ -104,6 +113,7 @@ def create_meetup():
         abort(400, description="Give the meetup a title.")
     description = (body.get("description") or "").strip()
     location = (body.get("location") or "").strip()
+    icon = _clean_icon(body.get("icon"))
     tz = _clean_tz(body.get("timezone"))
     hs, he = _clean_hours(body.get("hour_start", 8), body.get("hour_end", 24))
     dates = _clean_dates(body.get("dates"))
@@ -127,9 +137,9 @@ def create_meetup():
     db = get_db()
     now = now_iso()
     cur = db.execute(
-        "INSERT INTO meetups (title, description, location, timezone, hour_start, hour_end, paint_mode, "
-        "status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,'collecting',?,?)",
-        (title, description, location, tz, hs, he, mode, now, now),
+        "INSERT INTO meetups (title, description, location, icon, timezone, hour_start, hour_end, paint_mode, "
+        "status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,'collecting',?,?)",
+        (title, description, location, icon, tz, hs, he, mode, now, now),
     )
     mid = cur.lastrowid
     db.executemany("INSERT INTO meetup_dates (meetup_id, date) VALUES (?,?)", [(mid, d) for d in dates])
@@ -203,6 +213,7 @@ def update_meetup():
         abort(400, description="Give the meetup a title.")
     description = (body.get("description") if "description" in body else m["description"]) or ""
     location = (body.get("location") if "location" in body else m["location"]) or ""
+    icon = _clean_icon(body.get("icon")) if "icon" in body else m["icon"]
     hs, he = _clean_hours(body.get("hour_start", m["hour_start"]), body.get("hour_end", m["hour_end"]))
     dates = _clean_dates(body["dates"]) if "dates" in body else old_dates
     mode = _clean_mode(body.get("paint_mode", m["paint_mode"]))
@@ -230,9 +241,9 @@ def update_meetup():
         changes.append(f"Hours: now {f(hs)} to {f(he)}")
 
     db.execute(
-        "UPDATE meetups SET title=?, description=?, location=?, hour_start=?, hour_end=?, paint_mode=?, updated_at=? "
+        "UPDATE meetups SET title=?, description=?, location=?, icon=?, hour_start=?, hour_end=?, paint_mode=?, updated_at=? "
         "WHERE id=?",
-        (title, description.strip(), location.strip(), hs, he, mode, now_iso(), m["id"]),
+        (title, description.strip(), location.strip(), icon, hs, he, mode, now_iso(), m["id"]),
     )
     if dates != old_dates:
         db.execute("DELETE FROM meetup_dates WHERE meetup_id=?", (m["id"],))
@@ -348,6 +359,26 @@ def confirm():
             attachments=[("meetup.ics", "text/calendar", ics)],
         )
     return jsonify(meetup_view(db, meetup, g.participant))
+
+
+@bp.delete("/meetups/me")
+@require("planner")
+def delete_meetup():
+    """Delete the meetup for everyone. Invitees are told by email (cancelled) when mail is configured."""
+    db = get_db()
+    m = g.meetup
+    people = get_participants(db, m["id"])
+    ctx = base_ctx(m, people, get_dates(db, m["id"]))
+    for p in people:
+        if p["role"] == "invitee":
+            mailer.send(
+                "cancelled", p["email"], f'"{m["title"]}" is off',
+                dict(ctx, name=display_name(p)),
+                meetup_id=m["id"], participant_id=p["id"],
+            )
+    db.execute("DELETE FROM meetups WHERE id=?", (m["id"],))
+    db.commit()
+    return jsonify({"ok": True})
 
 
 @bp.post("/meetups/me/reopen")

@@ -111,7 +111,7 @@ button:disabled { opacity: .45; cursor: default; }
 .btn:hover:not(:disabled) { filter: brightness(1.06); }
 .btn.mint { background: var(--mint); color: var(--mint-ink); box-shadow: 0 8px 24px oklch(0.84 0.16 160 / .28); }
 .btn.ghost { background: var(--glass-2); color: var(--text); box-shadow: none; border: 1px solid var(--edge); }
-.btn.danger { background: transparent; color: var(--danger); box-shadow: none; border: 1px solid oklch(0.72 0.19 20 / .35); }
+.btn.danger { background: oklch(0.72 0.19 20 / .16); color: oklch(0.9 0.1 20); box-shadow: none; border: 1px solid oklch(0.72 0.19 20 / .45); }
 .btn.sm { height: 48px; font-size: 15px; }
 .btn.auto { width: auto; }
 .icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; color: var(--text); flex: none; }

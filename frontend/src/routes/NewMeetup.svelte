@@ -5,6 +5,8 @@
   import TimeGrid from '../components/TimeGrid.svelte'
   import InviteeList from '../components/InviteeList.svelte'
   import MapPicker from '../components/MapPicker.svelte'
+  import IconPicker from '../components/IconPicker.svelte'
+  import { iconSvg } from '../lib/icons.js'
   import Sheet from '../components/Sheet.svelte'
   import SaveSheet from '../components/SaveSheet.svelte'
   import { api } from '../lib/api.js'
@@ -53,12 +55,12 @@
     busy = true
     try {
       created = await api.createMeetup({
-        title: d.title, description: d.description, location: d.location, timezone,
+        title: d.title, description: d.description, location: d.location, icon: d.icon, timezone,
         hour_start: d.hourStart, hour_end: d.hourEnd, dates: d.dates, paint_mode: d.paintMode,
         planner: { name: d.plannerName, email: d.plannerEmail }, invitees: d.invitees, availability: d.mySlots,
       })
       clearDraft()
-      rememberMeetup({ token: created.planner_token, title: created.meetup.title, role: 'planner' })
+      rememberMeetup({ token: created.planner_token, title: created.meetup.title, role: 'planner', icon: created.meetup.icon })
       go('/new/done')
       window.scrollTo(0, 0)
     } catch (e) { error = e.message } finally { busy = false }
@@ -81,7 +83,7 @@
     <div class="top"><span></span><span class="label">Done</span></div>
     <div class="body">
       <div>
-        <h1>“{created.meetup.title}” is ready</h1>
+        <h1>{#if created.meetup.icon}<span class="h-icon">{@html iconSvg(created.meetup.icon, 28)}</span>{/if}“{created.meetup.title}” is ready</h1>
         <p class="lead">{created.mail_configured ? 'Invites are on their way. Your planner link was emailed to you too.' : 'Email isn’t set up on the server yet, so nothing was sent. Share the links below yourself.'}</p>
       </div>
       <div class="msg info">This meetup is saved on this device: it's listed on the Meetup home screen. <button type="button" class="inline-link" onclick={() => (saveOpen = true)}>Bookmark or install</button> to get back even faster.</div>
@@ -157,6 +159,7 @@
     <div class="body">
       <div><h1>What is it?</h1><p class="lead">A name people will recognise in their inbox.</p></div>
       <div class="field"><label for="title">Title</label><input id="title" type="text" placeholder="Board game night" bind:value={d.title} autocomplete="off" /></div>
+      <div class="field"><label>Icon <span class="muted">(optional, just for fun)</span></label><IconPicker bind:value={d.icon} /></div>
       <div class="field"><label for="desc">Description <span class="muted">(optional)</span></label><textarea id="desc" placeholder="Anything people should know" bind:value={d.description}></textarea></div>
     </div>
     <div class="bottom"><button type="button" class="btn" disabled={!d.title.trim()} onclick={next}>Next<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
@@ -190,7 +193,7 @@
       <div><h1>Review</h1><p class="lead">Tap a row to change it.</p></div>
       {#if error}<div class="msg error">{error}</div>{/if}
       <div class="glass" style="padding:4px 20px">
-        <button type="button" class="list-row" onclick={() => go('/new/3')}><div class="main"><div class="t">{d.title}</div><div class="s">{d.description || 'No description'}</div></div><span class="chev">›</span></button>
+        <button type="button" class="list-row" onclick={() => go('/new/3')}><div class="main"><div class="t">{#if d.icon}<span class="h-icon">{@html iconSvg(d.icon, 20)}</span>{/if}{d.title}</div><div class="s">{d.description || 'No description'}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/1')}><div class="main"><div class="t">{d.dates.length} {d.dates.length === 1 ? 'day' : 'days'}</div><div class="s">{d.dates.map((x) => fmtDate(x)).join(', ')}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/2')}><div class="main"><div class="t">Your times</div><div class="s">{d.mySlots.length ? `${d.mySlots.length * 15 / 60}h selected · hours ${hoursLabel}` : `Nothing selected yet · hours ${hoursLabel}`}</div></div><span class="chev">›</span></button>
         <button type="button" class="list-row" onclick={() => go('/new/4')}><div class="main"><div class="t">{d.plannerName}</div><div class="s">{d.plannerEmail}</div></div><span class="chev">›</span></button>
@@ -225,6 +228,7 @@
   .linkcard .who { font-weight: 700; display: flex; gap: 8px; align-items: center; }
   .linkcard code { font-size: 12px; word-break: break-all; color: var(--text-3); font-family: ui-monospace, Menlo, monospace; }
   .opt { border-top: 1px solid var(--line); }
+  .h-icon { display: inline-block; vertical-align: -3px; margin-right: 8px; color: var(--accent); }
   .inline-link { color: var(--accent); font-weight: 700; text-decoration: underline; }
   @media (min-width: 900px) {
     .screen.column.wide { max-width: 960px; }

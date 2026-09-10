@@ -10,6 +10,7 @@ Nothing below is final; every line gets owner sign-off.
 | response_saved  | planner        | invitee presses save, or taps Yes/No on a nudge | invitee name, nudge line if any, free windows, dashboard link |
 | meetup_updated  | each invitee   | planner changes dates/hours/details    | what changed, personal link |
 | confirmed       | everyone       | planner confirms a block               | final date/time, location, who is coming, .ics attached |
+| cancelled       | each invitee   | planner deletes the meetup             | title, planner name, that the link is dead |
 | nudge           | one invitee    | planner sends a nudge                  | % and names free at target block, Yes/No one-click buttons, link |
 
 
@@ -131,6 +132,15 @@ Behaviour:
   "Got it, {planner_name} has been told."
 - After the meetup is confirmed the buttons land on "This meetup is already confirmed."
 - invitee_count includes everyone invited plus the planner, so the nudged person is in the denominator.
+
+### cancelled  (DRAFT, not approved)
+Subject: "{title}" is off
+
+Hi {name},
+
+{planner_name} has cancelled "{title}". Your link for it no longer works.
+
+Sorry to bring bad news. Hopefully next time!
 
 ## UI labels (approved 2026-09-09)
 - Home buttons: "New meetup" / "Existing meetup"

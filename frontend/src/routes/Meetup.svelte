@@ -11,9 +11,11 @@
   import MapPicker from '../components/MapPicker.svelte'
   import Sheet from '../components/Sheet.svelte'
   import SaveSheet from '../components/SaveSheet.svelte'
+  import IconPicker from '../components/IconPicker.svelte'
+  import { iconSvg } from '../lib/icons.js'
   import { api, setToken } from '../lib/api.js'
   import { SLOT_MIN, addMinutes, fmtBlock, fmtDate, fmtTime, localTimezone, slotDate, slotKey, slotMinutes } from '../lib/time.js'
-  import { copyText, go, isWide, rememberMeetup } from '../lib/store.js'
+  import { copyText, go, isWide, rememberMeetup, forgetMeetup } from '../lib/store.js'
 
   let { token, tab = 'times' } = $props()
 
@@ -33,6 +35,7 @@
   // sheets
   let detailsOpen = $state(false)
   let saveOpen = $state(false)
+  let deleteOpen = $state(false)
   let decideOpen = $state(false)
   let selection = $state(null)
   let editing = $state(null)        // null | about | location | days | hours | mode
@@ -50,6 +53,7 @@
   })
 
   // settings form
+  let fIcon = $state('')
   let fTitle = $state(''), fDesc = $state(''), fLoc = $state(''), fDates = $state([]), fHs = $state(8), fHe = $state(24), fMode = $state('free')
 
   const meetup = $derived(data ? data.meetup : null)
@@ -95,7 +99,7 @@
     data = view
     mySlots = view.my_slots
     dirty = false
-    fTitle = view.meetup.title; fDesc = view.meetup.description; fLoc = view.meetup.location
+    fTitle = view.meetup.title; fDesc = view.meetup.description; fLoc = view.meetup.location; fIcon = view.meetup.icon || ''
     fDates = [...view.meetup.dates]; fHs = view.meetup.hour_start; fHe = view.meetup.hour_end; fMode = view.meetup.paint_mode
   }
   async function load() {
@@ -103,7 +107,7 @@
     setToken(token)
     try {
       apply(await api.getMeetup())
-      rememberMeetup({ token, title: data.meetup.title, role: data.me.role })
+      rememberMeetup({ token, title: data.meetup.title, role: data.me.role, icon: data.meetup.icon })
     } catch (e) { error = e.message } finally { loading = false }
   }
   $effect(() => { token; load() })
@@ -180,6 +184,15 @@
     busy = true; error = ''
     try { apply(await api.reopen()); editing = null; say('Reopened.') } catch (e) { error = e.message } finally { busy = false }
   }
+  async function doDelete() {
+    busy = true; error = ''
+    try {
+      await api.deleteMeetup()
+      forgetMeetup(token)
+      deleteOpen = false
+      go('/')
+    } catch (e) { error = e.message; deleteOpen = false } finally { busy = false }
+  }
   async function saveSettings(patch) {
     busy = true; error = ''
     try {
@@ -213,7 +226,7 @@
   const responded = $derived(people.filter((p) => p.responded).length)
   const answeredLine = $derived(`${responded} of ${people.length} have answered`)
   const myUrl = $derived(`${location.origin}${location.pathname}#/m/${token}`)
-  const sheetOpen = $derived(detailsOpen || saveOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
+  const sheetOpen = $derived(detailsOpen || saveOpen || deleteOpen || (decideOpen && !wide) || !!person || inviteOpen || !!editing)
 </script>
 
 {#snippet icon(name)}
@@ -257,7 +270,7 @@
     <aside class="side">
       <a class="brand" href="#/">Meet<b>up</b></a>
       <div>
-        <h2>{meetup.title}</h2>
+        <h2>{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 22)}</span>{/if}{meetup.title}</h2>
         <div class="sub">Planned by {isPlanner ? 'you' : planner.name} · {people.length} people{meetup.location ? ` · ${meetup.location}` : ''}</div>
         <div class="sub" style="margin-top:2px">{answeredLine}</div>
         <button type="button" class="link" onclick={() => (detailsOpen = true)}>Details</button>
@@ -278,7 +291,7 @@
         <div class="title-row">
           <div class="min0">
             {#if activeTab === 'times'}
-              <h2>{meetup.title}</h2>
+              <h2>{#if meetup.icon}<span class="h-icon">{@html iconSvg(meetup.icon, 22)}</span>{/if}{meetup.title}</h2>
               <div class="sub">Planned by {isPlanner ? 'you' : planner.name} · {people.length} people{meetup.location ? ` · ${meetup.location}` : ''}</div>
               <div class="sub" style="margin-top:2px">{answeredLine}</div>
             {:else if activeTab === 'best'}
@@ -349,6 +362,9 @@
           {:else}
             <p class="caption">Changing days or hours emails everyone, and drops selected times that no longer fit.</p>
           {/if}
+          <div class="glass" style="padding:4px 20px;margin-top:8px">
+            <button type="button" class="list-row" onclick={() => (deleteOpen = true)}><div class="main"><div class="t danger-text">Delete this meetup</div><div class="s">For everyone. Links stop working.</div></div><span class="chev">›</span></button>
+          </div>
         </div>
       {/if}
     </div>
@@ -406,8 +422,15 @@
   <Sheet open={editing === 'about'} onclose={() => (editing = null)} title="Title">
     <h2 style="text-align:center">Title and description</h2>
     <div class="field"><label for="st">Title</label><input id="st" type="text" bind:value={fTitle} /></div>
+    <div class="field"><label>Icon</label><IconPicker bind:value={fIcon} /></div>
     <div class="field"><label for="sd">Description</label><textarea id="sd" bind:value={fDesc}></textarea></div>
-    <button type="button" class="btn sm" disabled={busy || !fTitle.trim()} onclick={() => saveSettings({ title: fTitle, description: fDesc })}>Save</button>
+    <button type="button" class="btn sm" disabled={busy || !fTitle.trim()} onclick={() => saveSettings({ title: fTitle, description: fDesc, icon: fIcon })}>Save</button>
+  </Sheet>
+  <Sheet open={deleteOpen} onclose={() => (deleteOpen = false)} title="Delete">
+    <h2 style="text-align:center">Delete “{meetup.title}”?</h2>
+    <p class="muted" style="text-align:center;font-size:15px">This removes it for everyone. All {people.length} links stop working and everyone's selected times are gone. {data.mail_configured ? 'Invitees get a short email saying it\'s off.' : ''} This can't be undone.</p>
+    <button type="button" class="btn danger sm" disabled={busy} onclick={doDelete}>{busy ? 'Deleting…' : 'Delete for everyone'}</button>
+    <button type="button" class="btn ghost sm" onclick={() => (deleteOpen = false)}>Keep it</button>
   </Sheet>
   <Sheet open={editing === 'location'} onclose={() => (editing = null)} title="Location">
     <h2 style="text-align:center">Location</h2>
@@ -434,6 +457,7 @@
 
 <style>
   .center-screen { min-height: 100dvh; display: grid; place-items: center; }
+  .h-icon { display: inline-block; vertical-align: -4px; margin-right: 8px; color: var(--accent); }
   .shell { height: 100dvh; display: flex; flex-direction: column; position: relative; }
   .side { display: none; }
   .main { flex: 1; min-height: 0; display: flex; flex-direction: column; }

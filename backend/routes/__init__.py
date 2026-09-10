@@ -95,6 +95,7 @@ def meetup_view(db, meetup, me):
             "title": meetup["title"],
             "description": meetup["description"],
             "location": meetup["location"],
+            "icon": meetup["icon"],
             "timezone": meetup["timezone"],
             "hour_start": meetup["hour_start"],
             "hour_end": meetup["hour_end"],

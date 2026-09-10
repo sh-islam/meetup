@@ -54,7 +54,7 @@ export async function copyText(text) {
 const KEY = 'meetup.draft.v1'
 export const emptyDraft = () => ({
   dates: [], hourStart: 8, hourEnd: 24, mySlots: [],
-  title: '', description: '', location: '',
+  title: '', description: '', location: '', icon: '',
   plannerName: '', plannerEmail: '',
   invitees: [], paintMode: 'free',
 })
@@ -76,10 +76,10 @@ const RECENT = 'meetup.recent.v1'
 export function loadRecent() {
   try { return JSON.parse(localStorage.getItem(RECENT) || '[]') } catch { return [] }
 }
-export function rememberMeetup({ token, title, role }) {
+export function rememberMeetup({ token, title, role, icon = '' }) {
   try {
     const list = loadRecent().filter((m) => m.token !== token)
-    list.unshift({ token, title, role, at: Date.now() })
+    list.unshift({ token, title, role, icon, at: Date.now() })
     localStorage.setItem(RECENT, JSON.stringify(list.slice(0, 12)))
   } catch { /* ignore */ }
 }

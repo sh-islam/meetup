@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS meetups (
   description     TEXT NOT NULL DEFAULT '',
   location        TEXT NOT NULL DEFAULT '',
   location_json   TEXT,
+  icon            TEXT NOT NULL DEFAULT '',
   timezone        TEXT NOT NULL,
   hour_start      INTEGER NOT NULL DEFAULT 8,
   hour_end        INTEGER NOT NULL DEFAULT 24,
