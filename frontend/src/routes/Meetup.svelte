@@ -370,7 +370,7 @@
     </div>
 
     {#if isPlanner}
-      <nav class="tabbar tabbar-sheen">
+      <nav class="tabbar">
         {#each [['times', 'Times'], ['best', 'Best'], ['people', 'People'], ['settings', 'Settings']] as [t, l] (t)}
           <button type="button" class="tab" class:on={activeTab === t} onclick={() => openTab(t)}>{@render icon(t)}{l}</button>
         {/each}

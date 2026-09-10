@@ -63,18 +63,6 @@ body::after {
   background-size: 250% 100%;
   animation: sheen 12s linear infinite;
 }
-/* the same sweep travels along the 1px edge of every glass surface (see .edge-sheen) */
-.edge-sheen { position: relative; }
-.edge-sheen::after {
-  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
-  padding: 1px;
-  background: linear-gradient(115deg, transparent 35%, oklch(1 0 0 / .55) 50%, transparent 65%);
-  background-size: 250% 100%;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  animation: sheen 12s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) { .edge-sheen::after { animation: none; opacity: 0; } }
 @keyframes drift { from { transform: translate3d(-2%, -1%, 0) scale(1); opacity: .85; } to { transform: translate3d(2%, 2%, 0) scale(1.06); opacity: 1; } }
 @keyframes sheen { 0% { background-position: 120% 0; } 20% { background-position: -30% 0; } 100% { background-position: -30% 0; } }
 @media (prefers-reduced-motion: reduce) { body::before, body::after { animation: none; } }
@@ -100,8 +88,6 @@ h3 { font-size: 17px; font-weight: 700; }
 .bottom { position: sticky; bottom: 0; z-index: 20; overflow: hidden; padding: 16px var(--pad) calc(16px + env(safe-area-inset-bottom)); background: var(--bar-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid var(--edge); display: flex; gap: 12px; }
 .bottom > * { flex: 1; }
 .glass { background: var(--glass); border: 1px solid var(--edge); border-radius: var(--r); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); position: relative; }
-.glass::after { content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: 1; padding: 1px; background: linear-gradient(115deg, transparent 35%, oklch(1 0 0 / .5) 50%, transparent 65%); background-size: 250% 100%; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: sheen 12s linear infinite; }
-@media (prefers-reduced-motion: reduce) { .glass::after { animation: none; opacity: 0; } }
 .card { padding: 20px; }
 
 /* ---------- buttons ---------- */
@@ -198,11 +184,3 @@ button.list-row:active { background: var(--glass); }
   .screen.column .top { padding-left: 4px; }
 }
 
-/* bars: the sweep runs along the top edge */
-.bottom::after, .tabbar-sheen::after {
-  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; pointer-events: none;
-  background: linear-gradient(90deg, transparent 35%, oklch(1 0 0 / .55) 50%, transparent 65%);
-  background-size: 250% 100%;
-  animation: sheen 12s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) { .bottom::after, .tabbar-sheen::after { animation: none; } }

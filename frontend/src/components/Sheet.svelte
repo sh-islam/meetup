@@ -13,7 +13,7 @@
 
 {#if open}
   <div class="scrim" class:panel onclick={onclose} role="presentation"></div>
-  <div class="sheet edge-sheen" class:panel role="dialog" aria-modal="true" aria-label={title}>
+  <div class="sheet" class:panel role="dialog" aria-modal="true" aria-label={title}>
     <div class="grab"></div>
     {@render children?.()}
   </div>
