@@ -156,7 +156,7 @@ def test_full_flow(client):
     r = client.get("/meetups/me", headers=hdr(planner_token))
     assert [p["name"] for p in r.json["participants"]] == ["Sam", "Alex"]
     log = open(config.MAIL_LOG, encoding="utf-8").read()
-    assert 'Subject: Meetup: priya dropped out of "Board game night!"' in log
+    assert 'Subject: Meetup: Priya dropped out of "Board game night!"' in log
 
     # invitee can't delete; planner can; links die; invitees emailed
     assert client.delete("/meetups/me", headers=hdr(alex_token)).status_code == 403
